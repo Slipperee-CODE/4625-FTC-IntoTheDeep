@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomOpMode;
-import org.firstinspires.ftc.teamcode.customclasses.helpers.MechanismState;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.MultiProcessorWebcam;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.PoseStorage;
 
-@TeleOp(name="BasicTeleOp")
+@TeleOp(name="BasicTeleOp", group="TeleOp")
 public class BasicTeleOp extends CustomOpMode
 {
     public static final double DPAD_SPEED = 0.5;
