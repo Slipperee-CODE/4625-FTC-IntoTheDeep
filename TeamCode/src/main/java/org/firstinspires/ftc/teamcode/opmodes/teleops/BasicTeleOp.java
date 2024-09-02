@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleops;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.helpers.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.MultiProcessorWebcam;
-import org.firstinspires.ftc.teamcode.customclasses.helpers.PoseStorage;
 
+@Config
 @TeleOp(name="BasicTeleOp", group="TeleOp")
 public class BasicTeleOp extends CustomOpMode
 {
@@ -19,7 +20,6 @@ public class BasicTeleOp extends CustomOpMode
     public void init(){
         super.init();
         robotDrivetrain.setSpeedConstant(0.85);
-        roadrunnerDrivetrain.setPoseEstimate(PoseStorage.currentPose);
         gamepad1 = new CustomGamepad(this,1);
         tagAlign = new AprilTagAlign(hardwareMap,telemetry,gamepad1,robotDrivetrain);
 
@@ -27,10 +27,6 @@ public class BasicTeleOp extends CustomOpMode
         multiProcessorWebcam.setActiveProcessor(MultiProcessorWebcam.Processor.APRIL_TAG);
         multiProcessorWebcam.setExposure(2);
         multiProcessorWebcam.setGain(0);
-    }
-
-    public void start() {
-
     }
 
     public void loop() {
@@ -52,9 +48,9 @@ public class BasicTeleOp extends CustomOpMode
         }
 
         if (gamepad1.gamepad.right_trigger > 0.3 ) {
-            tagAlign.setState(MechanismState.NEAREST);
+            tagAlign.setState(AprilTagAlign.TagAlignState.NEAREST);
         } else {
-            tagAlign.setState(MechanismState.OFF);
+            tagAlign.setState(AprilTagAlign.TagAlignState.OFF);
         }
         multiProcessorWebcam.update();
 

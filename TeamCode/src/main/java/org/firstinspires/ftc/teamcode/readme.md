@@ -1,8 +1,8 @@
 TO DO:
 - Implement ExampleWaitingAuto (Including RoadRunner)
-  - Use the RoadRunner Action class and bake that into your custom Mechanism class 
-    - Actions continue to occur in their run() method as long as the method returns true
-    - https://rr.brott.dev/docs/v1-0/actions/#overview
+  - Tune all drive constants for roadrunner again, starting with reversing the proper motors to go the right direction 
+    - This includes deadwheels which, the parallel dead wheels should be rev hub ports 0 and 3
+
   - Figure out the best way of combining RoadRunner trajectories with mechanism actions
 
 - Implement MeepMeep

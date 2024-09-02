@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.customclasses.helpers;
 
 public abstract class WaitingAuto extends CustomOpMode {
-    CustomGamepad gamepadOne;
+    protected CustomGamepad gamepadOne;
 
     private final Clock __delayTimer = new Clock();
     private double time_to_start = 0.0;
@@ -27,6 +27,7 @@ public abstract class WaitingAuto extends CustomOpMode {
         __delayTimer.reset();
         startBeforeWait();
     }
+
     protected void startBeforeWait() {}
     protected void startAfterWait() {}
 
@@ -40,11 +41,11 @@ public abstract class WaitingAuto extends CustomOpMode {
         update();
     }
 
-    protected abstract void update();
+    protected void update() {};
 
     @Override
     public final void stop(){
-        PoseStorage.currentPose = roadrunnerDrivetrain.getPoseEstimate();
+
     }
 }
 

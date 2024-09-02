@@ -1,18 +1,19 @@
 package org.firstinspires.ftc.teamcode.customclasses.helpers;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
 public abstract class CustomOpMode extends OpMode {
     protected RobotDrivetrain robotDrivetrain;
-    protected SampleMecanumDrive roadrunnerDrivetrain;
+    protected MecanumDrive roadrunnerDrivetrain;
     protected Clock timer = new Clock();
 
     @Override //Overrides OpMode's init()
     public void init(){
         robotDrivetrain = new RobotDrivetrain(hardwareMap);
-        roadrunnerDrivetrain = new SampleMecanumDrive(hardwareMap);
+        roadrunnerDrivetrain = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
     }
 
     @Override //Overrides OpMode's init_loop()

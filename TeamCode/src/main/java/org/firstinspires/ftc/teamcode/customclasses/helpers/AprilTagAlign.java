@@ -14,6 +14,19 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import java.util.List;
 
 public class AprilTagAlign extends Mechanism {
+    public enum TagAlignState {
+        OFF,
+        ON,
+        NEAREST,
+        IDLE
+    }
+    private TagAlignState state;
+    public void setState(TagAlignState tagAlignState) {
+        state = tagAlignState;
+    }
+
+
+
     private final RobotDrivetrain robot;
     private final float STARTING_ERROR_BETWEEN_TAGS = 10; //in inches
     private final Telemetry telemetry;
@@ -50,7 +63,7 @@ public class AprilTagAlign extends Mechanism {
 
         switch (state) {
             case OFF:
-                state = MechanismState.IDLE;
+                state = TagAlignState.IDLE;
                 break;
             case ON:
                 if (gamepad != null){
@@ -83,7 +96,7 @@ public class AprilTagAlign extends Mechanism {
                 break;
 
             default:
-                state = MechanismState.IDLE;
+                state = TagAlignState.IDLE;
         }
     }
     public void goToAprilTagNearest(List<AprilTagDetection> currentTags)
