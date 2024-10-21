@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.AprilTagAlign;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.MultiProcessorWebcam;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Arm;
 
 @Config
 @TeleOp(name="BasicTeleOp", group="TeleOp")
@@ -14,6 +15,8 @@ public class BasicTeleOp extends CustomOpMode
 {
     public static final double DPAD_SPEED = 0.5;
     CustomGamepad gamepad1;
+    CustomGamepad gamepad2;
+    private Arm arm;
     private AprilTagAlign tagAlign;
     private MultiProcessorWebcam multiProcessorWebcam;
 
@@ -21,6 +24,8 @@ public class BasicTeleOp extends CustomOpMode
         super.init();
         robotDrivetrain.setSpeedConstant(0.85);
         gamepad1 = new CustomGamepad(this,1);
+        gamepad2 = new CustomGamepad(this, 2);
+        arm = Arm(hardwareMap, gamepad2);
         tagAlign = new AprilTagAlign(hardwareMap,telemetry,gamepad1,robotDrivetrain);
 
         multiProcessorWebcam = new MultiProcessorWebcam(hardwareMap);
@@ -31,6 +36,7 @@ public class BasicTeleOp extends CustomOpMode
 
     public void loop() {
         gamepad1.update();
+        gamepad2.update();
 
         if (gamepad1.guideDown) {
             robotDrivetrain.switchDirection();
@@ -53,6 +59,8 @@ public class BasicTeleOp extends CustomOpMode
             tagAlign.setState(AprilTagAlign.TagAlignState.OFF);
         }
         multiProcessorWebcam.update();
+
+        arm.update();
 
         telemetry.update();
     }

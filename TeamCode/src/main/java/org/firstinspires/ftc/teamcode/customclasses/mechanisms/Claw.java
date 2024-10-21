@@ -16,7 +16,6 @@ public class Claw extends Mechanism {
     private static final float STOWED_WITH_SAMPLE_WRIST_POS = 0.0f;
     private static final float STOWED_WITH_SPECIMEN_WRIST_POS = 0.0f;
 
-    private static final float SPECIMEN_CLIP_WRIST_POS = 0.0f;
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.0f;
 
