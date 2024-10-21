@@ -52,7 +52,7 @@ public class BasicAuto extends WaitingAuto {
                 .waitSeconds(2)
                 .build();
 
-        Actions.runBlocking(exampleMechanism.activate());
+        Actions.runBlocking(exampleMechanism.activateAction());
     }
     public void init_loop() {
         super.init_loop();
@@ -81,9 +81,9 @@ public class BasicAuto extends WaitingAuto {
         Actions.runBlocking(
                 new SequentialAction(
                         chosenTrajectory,
-                        exampleMechanism.activate(),
+                        exampleMechanism.activateAction(),
                         trajectoryActionCloseOut,
-                        exampleMechanism.deactivate()
+                        exampleMechanism.deactivateAction()
                 )
         );
     }

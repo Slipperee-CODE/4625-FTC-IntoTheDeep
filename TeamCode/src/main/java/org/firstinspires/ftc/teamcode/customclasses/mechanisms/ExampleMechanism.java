@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
-import android.content.ActivityNotFoundException;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -27,25 +25,33 @@ public class ExampleMechanism extends Mechanism {
 
     }
 
+    public void activate(){
+
+    }
+
     public class Activate implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket packet){
             packet.addLine("Activated ExampleMechanism");
-            return false;
+            activate();
+            return false; //Stops the method from looping
         }
     }
-    public Action activate(){
-        return new Activate();
+    public Action activateAction(){ return new Activate(); }
+
+    public void deactivate(){
+
     }
 
     public class Deactivate implements Action {
         @Override
         public boolean run (@NonNull TelemetryPacket packet){
             packet.addLine("Deactivated ExampleMechanism");
-            return false;
+            deactivate();
+            return false; //Stops the method from looping
         }
     }
-    public Action deactivate(){
+    public Action deactivateAction(){
         return new Deactivate();
     }
 }

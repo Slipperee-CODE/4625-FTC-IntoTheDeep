@@ -79,13 +79,13 @@ public class PIDMotor {
         return error;
     }
 
-    public void Update() { Update(null,clock.getDeltaSeconds()); }
+    public void update() { update(null,clock.getDeltaSeconds()); }
 
-    public void Update(double deltaTime) { Update(null,deltaTime);}
+    public void update(double deltaTime) { update(null,deltaTime);}
 
-    public void Update(Telemetry telemetry) { Update(telemetry,clock.getDeltaSeconds());}
+    public void update(Telemetry telemetry) { update(telemetry,clock.getDeltaSeconds());}
 
-    public void Update(Telemetry telemetry, double deltaTime)
+    public void update(Telemetry telemetry, double deltaTime)
     {
         final double pOutput;
         final double iOutput;
