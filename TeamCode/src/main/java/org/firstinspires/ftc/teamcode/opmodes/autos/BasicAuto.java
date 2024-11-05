@@ -24,14 +24,17 @@ public class BasicAuto extends WaitingAuto {
 
     private MultiProcessorWebcam multiProcessorWebcam;
 
+    @Override
     public void init() {
         super.init();
         exampleMechanism = new ExampleMechanism(gamepadOne);
 
+        /*
         multiProcessorWebcam = new MultiProcessorWebcam(hardwareMap);
         multiProcessorWebcam.setActiveProcessor(MultiProcessorWebcam.Processor.CUSTOM);
         multiProcessorWebcam.setExposure(2);
         multiProcessorWebcam.setGain(0);
+         */
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(0,0,0));
 
@@ -52,13 +55,16 @@ public class BasicAuto extends WaitingAuto {
                 .waitSeconds(2)
                 .build();
 
-        Actions.runBlocking(exampleMechanism.activateAction());
+        //Actions.runBlocking(exampleMechanism.activateAction());
     }
+
+    @Override
     public void init_loop() {
         super.init_loop();
-        multiProcessorWebcam.update();
-        visionResult = multiProcessorWebcam.getResultFromCustomProcessor();
+        //multiProcessorWebcam.update();
+        //visionResult = multiProcessorWebcam.getResultFromCustomProcessor();
     }
+
     @Override
     protected void startBeforeWait() {
         switch (visionResult){

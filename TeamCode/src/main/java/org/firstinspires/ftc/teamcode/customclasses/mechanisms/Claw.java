@@ -96,13 +96,8 @@ public class Claw extends Mechanism {
     }
 
     public void initUpdateForGrab(){
-        if (gamepad.a){
-            isGrabbingInInit = !isGrabbingInInit;
-            if (isGrabbingInInit){
-                clawServo.setPosition(CLAW_GRABBING_POS);
-            } else {
-                clawServo.setPosition(CLAW_NOT_GRABBING_POS);
-            }
+        if (gamepad.yDown){
+            triggerGamepadYClawMode();
         }
     }
 }

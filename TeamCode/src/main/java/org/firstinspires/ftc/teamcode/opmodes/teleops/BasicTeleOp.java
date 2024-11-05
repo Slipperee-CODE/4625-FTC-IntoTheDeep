@@ -20,20 +20,29 @@ public class BasicTeleOp extends CustomOpMode
     private AprilTagAlign tagAlign;
     private MultiProcessorWebcam multiProcessorWebcam;
 
+    @Override
     public void init(){
         super.init();
         robotDrivetrain.setSpeedConstant(0.85);
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new Arm(hardwareMap, gamepad2);
+        /*
         tagAlign = new AprilTagAlign(hardwareMap,telemetry,gamepad1,robotDrivetrain);
 
         multiProcessorWebcam = new MultiProcessorWebcam(hardwareMap);
         multiProcessorWebcam.setActiveProcessor(MultiProcessorWebcam.Processor.APRIL_TAG);
         multiProcessorWebcam.setExposure(2);
         multiProcessorWebcam.setGain(0);
+        */
     }
 
+    @Override
+    public void init_loop(){
+        arm.claw.initUpdateForGrab();
+    }
+
+    @Override
     public void loop() {
         gamepad1.update();
         gamepad2.update();
@@ -53,12 +62,14 @@ public class BasicTeleOp extends CustomOpMode
             robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 0.5);
         }
 
+        /*
         if (gamepad1.gamepad.right_trigger > 0.3 ) {
             tagAlign.setState(AprilTagAlign.TagAlignState.NEAREST);
         } else {
             tagAlign.setState(AprilTagAlign.TagAlignState.OFF);
         }
         multiProcessorWebcam.update();
+        */
 
         arm.update();
 
