@@ -25,7 +25,7 @@ public class BasicTeleOp extends CustomOpMode
         robotDrivetrain.setSpeedConstant(0.85);
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
-        arm = Arm(hardwareMap, gamepad2);
+        arm = new Arm(hardwareMap, gamepad2);
         tagAlign = new AprilTagAlign(hardwareMap,telemetry,gamepad1,robotDrivetrain);
 
         multiProcessorWebcam = new MultiProcessorWebcam(hardwareMap);

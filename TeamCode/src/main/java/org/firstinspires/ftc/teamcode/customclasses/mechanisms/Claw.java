@@ -62,7 +62,7 @@ public class Claw extends Mechanism {
         if (isGamepadAClawModeActive) return;
 
         if (isGamepadYClawModeActive){
-            isGamepadAClawModeActive = false;
+            isGamepadYClawModeActive = false;
             clawServo.setPosition(CLAW_GRABBING_POS);
             wristServo.setPosition(STOWED_WITH_SPECIMEN_WRIST_POS);
 
@@ -82,7 +82,7 @@ public class Claw extends Mechanism {
         if (isGamepadYClawModeActive) return false;
 
         if (isGamepadAClawModeActive){
-            isGamepadYClawModeActive = false;
+            isGamepadAClawModeActive = false;
             clawServo.setPosition(CLAW_GRABBING_POS);
             wristServo.setPosition(STOWED_WITH_SAMPLE_WRIST_POS);
         } else {

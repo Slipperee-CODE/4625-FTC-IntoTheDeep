@@ -52,42 +52,42 @@ public class Arm extends Mechanism {
     public void update() {
         if (gamepad != null){
             if (!isSelectingEndPos){
-                if (gamepad.y){
+                if (gamepad.yDown){
                     claw.triggerGamepadYClawMode();
-                } else if (gamepad.b){
+                } else if (gamepad.bDown){
                     claw.triggerGamepadBClawMode();
-                } else if (gamepad.a){
+                } else if (gamepad.aDown){
                     if (claw.triggerGamepadAClawMode()){
                         setArmState(ArmState.SUBMERSIBLE_GRAB);
                     }
                 }
             } else {
                 if (isBarSelected){
-                    if (gamepad.dpad_up){
+                    if (gamepad.upDown){
                         setArmState(ArmState.UPPER_BAR);
-                    } else if (gamepad.dpad_down){
+                    } else if (gamepad.downDown){
                         setArmState(ArmState.LOWER_BAR);
                     }
                 } else {
-                    if (gamepad.dpad_up){
+                    if (gamepad.upDown){
                         setArmState(ArmState.UPPER_BUCKET);
-                    } else if (gamepad.dpad_down){
+                    } else if (gamepad.downDown){
                         setArmState(ArmState.LOWER_BUCKET);
                     }
                 }
 
-                if (gamepad.x){
+                if (gamepad.xDown){
                     isSelectingEndPos = false;
                     isBarSelected = false;
                     setArmState(ArmState.DEFAULT);
                 }
             }
 
-            if (gamepad.dpad_left || gamepad.dpad_right){
+            if (gamepad.leftDown || gamepad.rightDown){
                 isSelectingEndPos = true;
-                if (gamepad.dpad_right){
+                if (gamepad.rightDown){
                     isBarSelected = true;
-                } else if (gamepad.dpad_left){
+                } else if (gamepad.leftDown){
                     isBarSelected = false;
                 }
             }
