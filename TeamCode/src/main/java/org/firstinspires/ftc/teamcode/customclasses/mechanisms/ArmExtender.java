@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -20,14 +21,14 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.PIDMotor;
 public class ArmExtender extends Mechanism {
     public enum ExtensionPos{
         MIN_EXTENSION(0),
-        MAX_EXTENSION(0),
-        DEFAULT_EXTENSION(0),
-        SUBMERSIBLE_EXTENSION(0),
-        LOWER_BUCKET_EXTENSION(0),
-        UPPER_BUCKET_EXTENSION(0),
-        LOWER_SPECIMEN_BAR_EXTENSION(0),
-        UPPER_SPECIMEN_BAR_EXTENSION(0),
-        LOWER_HANG_EXTENSION(0);
+        MAX_EXTENSION(convertInchesToTicks(20)),
+        DEFAULT_EXTENSION(convertInchesToTicks(0)),
+        SUBMERSIBLE_EXTENSION(convertInchesToTicks(15)),
+        LOWER_BUCKET_EXTENSION(convertInchesToTicks(10)),
+        UPPER_BUCKET_EXTENSION(convertInchesToTicks(12)),
+        LOWER_SPECIMEN_BAR_EXTENSION(convertInchesToTicks(10)),
+        UPPER_SPECIMEN_BAR_EXTENSION(convertInchesToTicks(12)),
+        LOWER_HANG_EXTENSION(convertInchesToTicks(15));
 
         int pos;
         ExtensionPos(int pos) {this.pos = pos;}
@@ -35,12 +36,15 @@ public class ArmExtender extends Mechanism {
 
     private PIDMotor farPivotPIDMotor = null;
     private PIDMotor closePivotPIDMotor = null;
+    private DigitalChannel magneticLimitSwitch;
 
     public static final double P = 0.0045;
     public static final double I = 0.00001;
     public static final double D = 0.00;
 
     private static final float SPEED = 50.0f;
+    private static final double TICKS_PER_REV = 751.8;
+    private static final double SPOOL_CIRCUMFERENCE = 2*0.575*Math.PI; //in inches
 
     public ArmExtender(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
@@ -50,6 +54,7 @@ public class ArmExtender extends Mechanism {
     public ArmExtender(HardwareMap hardwareMap){
         DcMotor farPivotMotor = hardwareMap.get(DcMotor.class, "farPivotMotor");
         DcMotor closePivotMotor = hardwareMap.get(DcMotor.class, "closePivotMotor");
+        magneticLimitSwitch = hardwareMap.get(DigitalChannel.class, "magneticLimitSwitch");
 
         farPivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         closePivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -84,6 +89,11 @@ public class ArmExtender extends Mechanism {
             }
         }
 
+        if (magneticLimitSwitch.getState()){
+            farPivotPIDMotor.ResetPID();
+            closePivotPIDMotor.ResetPID();
+        }
+
         farPivotPIDMotor.update();
         closePivotPIDMotor.update();
     }
@@ -91,6 +101,10 @@ public class ArmExtender extends Mechanism {
     @Override
     public void update(Telemetry telemetry) {
         update();
+    }
+
+    private static int convertInchesToTicks(double inches){
+        return (int) ((inches/SPOOL_CIRCUMFERENCE) * TICKS_PER_REV);
     }
 
     public void SetExtension(ExtensionPos extensionPos){

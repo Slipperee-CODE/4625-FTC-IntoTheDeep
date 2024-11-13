@@ -65,14 +65,18 @@ public class Arm extends Mechanism {
                 if (isBarSelected){
                     if (gamepad.upDown){
                         setArmState(ArmState.UPPER_BAR);
+                        isSelectingEndPos = false;
                     } else if (gamepad.downDown){
                         setArmState(ArmState.LOWER_BAR);
+                        isSelectingEndPos = false;
                     }
                 } else {
                     if (gamepad.upDown){
                         setArmState(ArmState.UPPER_BUCKET);
+                        isSelectingEndPos = false;
                     } else if (gamepad.downDown){
                         setArmState(ArmState.LOWER_BUCKET);
+                        isSelectingEndPos = false;
                     }
                 }
 

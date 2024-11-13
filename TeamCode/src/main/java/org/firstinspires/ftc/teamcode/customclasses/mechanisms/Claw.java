@@ -24,8 +24,6 @@ public class Claw extends Mechanism {
 
     private static final float ROTATIONAL_LIMIT = 0.5f;
 
-    private boolean isGrabbingInInit = false;
-
     private final Servo wristServo;
     private final Servo clawServo;
     private final Servo rotationServo;
@@ -88,6 +86,7 @@ public class Claw extends Mechanism {
         } else {
             isGamepadAClawModeActive = true;
             //The below setPositions need to be delayed to allow for reach to extend over bar, same with retraction but reversed
+            //This is fine because we can pull up real close and activate it there, the servo should come down after it is in a safe area
             clawServo.setPosition(CLAW_NOT_GRABBING_POS);
             wristServo.setPosition(SUBMERSIBLE_GRAB_WRIST_POS);
         }

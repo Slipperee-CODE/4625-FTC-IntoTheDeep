@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.PIDMotor;
 public class ArmPivoter extends Mechanism {
     public enum PivotPos{
         DEFAULT_PIVOT(0),
-        LOWER_HANG_PIVOT(0),
-        UPPER_BUCKET_PIVOT(0),
-        LOWER_BUCKET_PIVOT(0),
-        UPPER_SPECIMEN_BAR_PIVOT(0),
-        LOWER_SPECIMEN_BAR_PIVOT(0);
+        LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
+        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
+        LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
+        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.75)),
+        LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66));
 
         int pos;
         PivotPos(int pos) {this.pos = pos;}
@@ -33,6 +33,12 @@ public class ArmPivoter extends Mechanism {
     public static final double I = 0.00001;
     public static final double D = 0.00;
     private static final double TOLERANCE = .01;
+
+    private static final double TICKS_PER_REV = 384.5;
+    private static final int SMALL_PULLEY_TEETH = 18;
+    private static final int BIG_PULLEY_TEETH = 122;
+    private static final double PULLEY_RATIO = (double) BIG_PULLEY_TEETH / SMALL_PULLEY_TEETH;
+    private static final double TICKS_FOR_90_DEGREES = TICKS_PER_REV * 0.25 * PULLEY_RATIO;
 
     public ArmPivoter(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
@@ -66,6 +72,10 @@ public class ArmPivoter extends Mechanism {
     @Override
     public void update(Telemetry telemetry) {
         update();
+    }
+
+    private static int convertPercentAngleToTicks(double percentOf90){
+        return (int) (TICKS_FOR_90_DEGREES*percentOf90);
     }
 
     public void SetPivot(PivotPos pivotPos){
