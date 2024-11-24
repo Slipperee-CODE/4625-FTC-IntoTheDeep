@@ -98,6 +98,7 @@ public class ArmExtender extends Mechanism {
                 } else {
                     clippedRight = Range.clip(targetRight, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
                     clippedLeft = Range.clip(targetLeft, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
+                    //NOT YET USING EFFECTIVE CURRENT MAX EXTENSION
                 }
 
                 farPivotPIDMotor.setTarget(clippedLeft);
