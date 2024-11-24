@@ -23,7 +23,7 @@ public class BasicTeleOp extends CustomOpMode
     @Override
     public void init(){
         super.init();
-        robotDrivetrain.setSpeedConstant(0.85);
+        robotDrivetrain.setSpeedConstant(.9);
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new Arm(hardwareMap, gamepad2);
@@ -39,7 +39,7 @@ public class BasicTeleOp extends CustomOpMode
 
     @Override
     public void init_loop(){
-        arm.claw.initUpdateForGrab();
+        //arm.claw.initUpdateForGrab();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class BasicTeleOp extends CustomOpMode
             if (gamepad1.dpad_down) vert += DPAD_SPEED;
             robotDrivetrain.emulateController(vert,horizontal,0);
         } else {
-            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 0.5);
+            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 0.85);
         }
 
         /*
@@ -71,7 +71,7 @@ public class BasicTeleOp extends CustomOpMode
         multiProcessorWebcam.update();
         */
 
-        arm.update();
+        arm.update(telemetry);
 
         telemetry.update();
     }

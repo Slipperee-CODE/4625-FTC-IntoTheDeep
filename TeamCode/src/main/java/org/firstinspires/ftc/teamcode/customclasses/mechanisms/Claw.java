@@ -12,21 +12,21 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.Mechanism;
 
 public class Claw extends Mechanism {
-    private static final float STOWED_WRIST_POS = 0.0f;
-    private static final float STOWED_WITH_SAMPLE_WRIST_POS = 0.0f;
-    private static final float STOWED_WITH_SPECIMEN_WRIST_POS = 0.0f;
+    private static final float STOWED_WRIST_POS = .7f;
+    private static final float STOWED_WITH_SAMPLE_WRIST_POS = 0.5f;
+    private static final float STOWED_WITH_SPECIMEN_WRIST_POS = 0.5f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
-    private static final float SPECIMEN_GRAB_WRIST_POS = 0.0f;
+    private static final float SPECIMEN_GRAB_WRIST_POS = 0.4f;
 
     private static final float CLAW_NOT_GRABBING_POS = 0.0f;
-    private static final float CLAW_GRABBING_POS = 0.0f;
+    private static final float CLAW_GRABBING_POS = 0.295f;
 
     private static final float ROTATIONAL_LIMIT = 0.5f;
 
     private final Servo wristServo;
     private final Servo clawServo;
-    private final Servo rotationServo;
+    //private final Servo rotationServo;
 
     private boolean isGamepadYClawModeActive = false;
     private boolean isGamepadAClawModeActive = false;
@@ -39,7 +39,7 @@ public class Claw extends Mechanism {
     public Claw(HardwareMap hardwareMap){
         wristServo = hardwareMap.get(Servo.class, "wristServo");
         clawServo = hardwareMap.get(Servo.class, "clawServo");
-        rotationServo = hardwareMap.get(Servo.class, "rotationServo");
+        //rotationServo = hardwareMap.get(Servo.class, "rotationServo");
         wristServo.setPosition(STOWED_WRIST_POS);
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
     }
@@ -47,7 +47,7 @@ public class Claw extends Mechanism {
     @Override
     public void update() {
         if (isGamepadAClawModeActive) {
-            rotationServo.setPosition(gamepad.right_stick_x * ROTATIONAL_LIMIT);
+            //rotationServo.setPosition(gamepad.right_stick_x * ROTATIONAL_LIMIT);
         }
     }
 

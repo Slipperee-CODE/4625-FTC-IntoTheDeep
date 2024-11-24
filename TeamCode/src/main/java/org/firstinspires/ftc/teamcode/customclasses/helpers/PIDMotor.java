@@ -116,4 +116,8 @@ public class PIDMotor {
             telemetry.addLine("Output -> P: " + round(pOutput) + "  I: " + round(iOutput) + " D: " + round(dOutput));
         }
     }
+
+    public double getPower(){
+        return motor.getPower();
+    }
 }

@@ -17,7 +17,7 @@ public abstract class WaitingAuto extends CustomOpMode {
         if (gamepadOne.yDown) {
             time_to_start = 0.0;
         }
-        time_to_start += gamepad1.left_stick_y * 0.001;
+        time_to_start += gamepadOne.left_stick_y * 0.001;
         telemetry.addData("Time To Start: ",time_to_start);
         telemetry.addLine("Left Joystick to control");
         telemetry.addLine("Y to Reset to 0");

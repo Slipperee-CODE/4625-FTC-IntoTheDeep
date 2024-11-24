@@ -17,10 +17,10 @@ public class ArmPivoter extends Mechanism {
     public enum PivotPos{
         DEFAULT_PIVOT(0),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
-        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
-        LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
-        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.75)),
-        LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66));
+        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
+        LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
+        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66)),
+        LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33));
 
         int pos;
         PivotPos(int pos) {this.pos = pos;}
@@ -55,6 +55,9 @@ public class ArmPivoter extends Mechanism {
         leftPivotMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightPivotMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        leftPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightPivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         leftPivotMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftPivotPIDMotor = new PIDMotor(leftPivotMotor, P, I, D);
@@ -64,14 +67,18 @@ public class ArmPivoter extends Mechanism {
     }
 
     @Override
-    public void update() {
+    public void update(Telemetry telemetry) {
         leftPivotPIDMotor.update();
         rightPivotPIDMotor.update();
+        telemetry.addData("leftPivotPIDMotor Pos:", leftPivotPIDMotor.getPos());
+        telemetry.addData("leftPivotPIDMotor Target:", leftPivotPIDMotor.getTarget());
+        telemetry.addData("rightPivotPIDMotor Pos:", rightPivotPIDMotor.getPos());
+        telemetry.addData("rightPivotPIDMotor Target:", rightPivotPIDMotor.getTarget());
     }
 
     @Override
-    public void update(Telemetry telemetry) {
-        update();
+    public void update() {
+
     }
 
     private static int convertPercentAngleToTicks(double percentOf90){
@@ -81,5 +88,9 @@ public class ArmPivoter extends Mechanism {
     public void SetPivot(PivotPos pivotPos){
         leftPivotPIDMotor.setTarget(pivotPos.pos);
         rightPivotPIDMotor.setTarget(pivotPos.pos);
+    }
+    
+    public double GetCurrPivotInRadians(){
+        return (((leftPivotPIDMotor.getPos() + rightPivotPIDMotor.getPos()) / 2.0f)/TICKS_FOR_90_DEGREES)*Math.PI/2;
     }
 }

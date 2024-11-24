@@ -13,7 +13,7 @@ public abstract class CustomOpMode extends OpMode {
     @Override //Overrides OpMode's init()
     public void init(){
         robotDrivetrain = new RobotDrivetrain(hardwareMap);
-        roadrunnerDrivetrain = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+        //roadrunnerDrivetrain = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
     }
 
     @Override //Overrides OpMode's init_loop()
