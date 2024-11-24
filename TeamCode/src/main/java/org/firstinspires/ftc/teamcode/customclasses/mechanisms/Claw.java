@@ -56,8 +56,8 @@ public class Claw extends Mechanism {
         update();
     }
 
-    public void triggerGamepadYClawMode(){
-        if (isGamepadAClawModeActive) return;
+    public boolean triggerGamepadYClawMode(){
+        if (isGamepadAClawModeActive) return false;
 
         if (isGamepadYClawModeActive){
             isGamepadYClawModeActive = false;
@@ -69,6 +69,8 @@ public class Claw extends Mechanism {
             clawServo.setPosition(CLAW_NOT_GRABBING_POS);
             wristServo.setPosition(SPECIMEN_GRAB_WRIST_POS);
         }
+
+        return isGamepadYClawModeActive;
     }
 
     public void triggerGamepadBClawMode(){

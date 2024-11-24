@@ -28,7 +28,14 @@ public class ArmExtender extends Mechanism {
         UPPER_BUCKET_EXTENSION(1250),
         LOWER_SPECIMEN_BAR_EXTENSION(500),
         UPPER_SPECIMEN_BAR_EXTENSION(750),
-        LOWER_HANG_EXTENSION(400);
+        LOWER_HANG_EXTENSION(400),
+        WALL_GRAB_EXTENSION(250),
+        FIRST_SPECIMEN_EXTENSION(400),
+        SECOND_SPECIMEN_EXTENSION(600),
+        THIRD_SPECIMEN_EXTENSION(800),
+        FIRST_SAMPLE_EXTENSION(400),
+        SECOND_SAMPLE_EXTENSION(600),
+        THIRD_SAMPLE_EXTENSION(800);
 
         int pos;
         ExtensionPos(int pos) {this.pos = pos;}

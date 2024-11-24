@@ -18,7 +18,14 @@ public class Arm extends Mechanism {
         UPPER_BUCKET(ArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, ArmExtender.ExtensionPos.UPPER_BUCKET_EXTENSION),
         LOWER_BAR(ArmPivoter.PivotPos.LOWER_SPECIMEN_BAR_PIVOT, ArmExtender.ExtensionPos.LOWER_SPECIMEN_BAR_EXTENSION),
         UPPER_BAR(ArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, ArmExtender.ExtensionPos.UPPER_SPECIMEN_BAR_EXTENSION),
-        LOWER_HANG(ArmPivoter.PivotPos.LOWER_HANG_PIVOT, ArmExtender.ExtensionPos.LOWER_HANG_EXTENSION);
+        LOWER_HANG(ArmPivoter.PivotPos.LOWER_HANG_PIVOT, ArmExtender.ExtensionPos.LOWER_HANG_EXTENSION),
+        WALL_GRAB(ArmPivoter.PivotPos.WALL_GRAB_PIVOT, ArmExtender.ExtensionPos.WALL_GRAB_EXTENSION),
+        AUTO_FIRST_SPECIMEN(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.FIRST_SPECIMEN_EXTENSION),
+        AUTO_SECOND_SPECIMEN(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.SECOND_SPECIMEN_EXTENSION),
+        AUTO_THIRD_SPECIMEN(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.THIRD_SPECIMEN_EXTENSION),
+        AUTO_FIRST_SAMPLE(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.FIRST_SAMPLE_EXTENSION),
+        AUTO_SECOND_SAMPLE(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.SECOND_SAMPLE_EXTENSION),
+        AUTO_THIRD_SAMPLE(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.THIRD_SAMPLE_EXTENSION);
 
         ArmPivoter.PivotPos pivotPos;
         ArmExtender.ExtensionPos extensionPos;
@@ -54,8 +61,8 @@ public class Arm extends Mechanism {
         if (gamepad != null){
             if (!isSelectingEndPos) {
                 /*
-                    if (gamepad.yDown){
-                        claw.triggerGamepadYClawMode();
+                    if (claw.triggerGamepadYClawMode()){
+                        //setArmState(ArmState.WALL_GRAB);
                     } else if (gamepad.bDown){
                         claw.triggerGamepadBClawMode();
                     } else if (gamepad.aDown){
@@ -134,4 +141,6 @@ public class Arm extends Mechanism {
     }
 
     public Action setArmStateAction(ArmState armState, Telemetry telemetry){ return new SetArmState(telemetry, armState); }
+
+    //Create claw function triggering functions + set proper arm states for those claw functions
 }

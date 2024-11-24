@@ -20,7 +20,8 @@ public class ArmPivoter extends Mechanism {
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
         UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66)),
-        LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33));
+        LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
+        WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.1));
 
         int pos;
         PivotPos(int pos) {this.pos = pos;}
