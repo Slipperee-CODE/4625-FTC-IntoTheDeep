@@ -133,10 +133,6 @@ public class ArmExtender extends Mechanism {
 
     }
 
-    private static int convertInchesToTicks(double inches){
-        return (int) ((inches/SPOOL_CIRCUMFERENCE) * TICKS_PER_REV);
-    }
-
     public void SetExtension(ExtensionPos extensionPos){
         farPivotPIDMotor.setTarget(extensionPos.pos);
         closePivotPIDMotor.setTarget(extensionPos.pos);
