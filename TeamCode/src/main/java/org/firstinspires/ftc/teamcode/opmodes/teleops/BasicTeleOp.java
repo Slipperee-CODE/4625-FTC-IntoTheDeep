@@ -71,8 +71,7 @@ public class BasicTeleOp extends CustomOpMode
         multiProcessorWebcam.update();
         */
 
-        arm.update(telemetry);
-
+        arm.updateWithBoolean(telemetry);
         telemetry.update();
     }
 }
