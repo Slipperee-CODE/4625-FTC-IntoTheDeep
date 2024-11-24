@@ -49,8 +49,8 @@ public class Arm extends Mechanism {
         //claw = new Claw(hardwareMap);
     }
 
-    @Override
-    public void update(Telemetry telemetry) {
+
+    public boolean updateWithBoolean(Telemetry telemetry) {
         if (gamepad != null){
             if (!isSelectingEndPos) {
                 /*
@@ -78,7 +78,7 @@ public class Arm extends Mechanism {
                         setArmState(ArmState.UPPER_BUCKET);
                         isSelectingEndPos = false;
                     } else if (gamepad.downDown) {
-                        telemetry.addLine("Lower Bucket Selected");
+                        //telemetry.addLine("Lower Bucket Selected");
                         setArmState(ArmState.LOWER_BUCKET);
                         isSelectingEndPos = false;
                     }
@@ -103,6 +103,7 @@ public class Arm extends Mechanism {
         armPivoter.update(telemetry);
         armExtender.update(telemetry, armPivoter.GetCurrPivotInRadians());
         //claw.update();
+        return armExtender.isPIDMotorTargetsReached() && armPivoter.isPIDMotorTargetsReached();
     }
 
     @Override
@@ -116,9 +117,11 @@ public class Arm extends Mechanism {
 
     public class SetArmState implements Action {
         private ArmState armState;
+        private Telemetry telemetry;
 
-        public SetArmState(ArmState armState){
+        public SetArmState(Telemetry telemetry, ArmState armState){
             super();
+            this.telemetry = telemetry;
             this.armState = armState;
         }
 
@@ -126,8 +129,9 @@ public class Arm extends Mechanism {
         public boolean run (@NonNull TelemetryPacket packet){
             packet.addLine("Arm State has been set");
             setArmState(armState);
-            return false; //Stops the method from looping
+            return updateWithBoolean(telemetry); //False stops the method from looping, true keeps it going
         }
     }
-    public Action setArmStateAction(ArmState armState){ return new SetArmState(armState); }
+
+    public Action setArmStateAction(ArmState armState, Telemetry telemetry){ return new SetArmState(telemetry, armState); }
 }

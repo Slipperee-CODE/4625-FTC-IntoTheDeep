@@ -24,10 +24,10 @@ public class ArmExtender extends Mechanism {
         MAX_EXTENSION(4000), //4400 max
         DEFAULT_EXTENSION(0),
         SUBMERSIBLE_EXTENSION(250),
-        LOWER_BUCKET_EXTENSION(125),
-        UPPER_BUCKET_EXTENSION(175),
-        LOWER_SPECIMEN_BAR_EXTENSION(300),
-        UPPER_SPECIMEN_BAR_EXTENSION(350),
+        LOWER_BUCKET_EXTENSION(650),
+        UPPER_BUCKET_EXTENSION(1250),
+        LOWER_SPECIMEN_BAR_EXTENSION(500),
+        UPPER_SPECIMEN_BAR_EXTENSION(750),
         LOWER_HANG_EXTENSION(400);
 
         int pos;
@@ -48,6 +48,8 @@ public class ArmExtender extends Mechanism {
 
     private int effectiveCurrentMaxExtension;
     private final int HORIZONTAL_EXPANSION_LIMIT = 3000; //in ticks
+
+    private final int TOLERANCE = 10; // in ticks
 
     public ArmExtender(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
@@ -136,5 +138,9 @@ public class ArmExtender extends Mechanism {
     public void SetExtension(ExtensionPos extensionPos){
         farPivotPIDMotor.setTarget(extensionPos.pos);
         closePivotPIDMotor.setTarget(extensionPos.pos);
+    }
+
+    public boolean isPIDMotorTargetsReached(){
+        return Math.abs(farPivotPIDMotor.getError()) < TOLERANCE && Math.abs(closePivotPIDMotor.getError()) < TOLERANCE;
     }
 }

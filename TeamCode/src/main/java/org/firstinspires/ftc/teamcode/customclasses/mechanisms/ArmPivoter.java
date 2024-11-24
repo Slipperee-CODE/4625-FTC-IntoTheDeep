@@ -32,13 +32,13 @@ public class ArmPivoter extends Mechanism {
     public static final double P = 0.0045;
     public static final double I = 0.00001;
     public static final double D = 0.00;
-    private static final double TOLERANCE = .01;
 
     private static final double TICKS_PER_REV = 384.5;
     private static final int SMALL_PULLEY_TEETH = 18;
     private static final int BIG_PULLEY_TEETH = 122;
     private static final double PULLEY_RATIO = (double) BIG_PULLEY_TEETH / SMALL_PULLEY_TEETH;
     private static final double TICKS_FOR_90_DEGREES = TICKS_PER_REV * 0.25 * PULLEY_RATIO;
+    private final int TOLERANCE = 10; // in ticks
 
     public ArmPivoter(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
@@ -92,5 +92,9 @@ public class ArmPivoter extends Mechanism {
     
     public double GetCurrPivotInRadians(){
         return (((leftPivotPIDMotor.getPos() + rightPivotPIDMotor.getPos()) / 2.0f)/TICKS_FOR_90_DEGREES)*Math.PI/2;
+    }
+
+    public boolean isPIDMotorTargetsReached(){
+        return Math.abs(leftPivotPIDMotor.getError()) < TOLERANCE && Math.abs(rightPivotPIDMotor.getError()) < TOLERANCE;
     }
 }
