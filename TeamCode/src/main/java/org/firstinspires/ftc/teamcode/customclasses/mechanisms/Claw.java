@@ -17,7 +17,7 @@ public class Claw extends Mechanism {
     private static final float STOWED_WITH_SPECIMEN_WRIST_POS = 0.5f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
-    private static final float SPECIMEN_GRAB_WRIST_POS = 0.4f;
+    private static final float SPECIMEN_GRAB_WRIST_POS = 0.25f; //was .4 for Meet 2
 
     private static final float CLAW_NOT_GRABBING_POS = 0.0f;
     private static final float CLAW_GRABBING_POS = 0.295f;
@@ -26,7 +26,7 @@ public class Claw extends Mechanism {
 
     private final Servo wristServo;
     private final Servo clawServo;
-    //private final Servo rotationServo;
+    public final Servo rotationServo;
 
     private boolean isGamepadYClawModeActive = false;
     private boolean isGamepadAClawModeActive = false;
@@ -39,7 +39,7 @@ public class Claw extends Mechanism {
     public Claw(HardwareMap hardwareMap){
         wristServo = hardwareMap.get(Servo.class, "wristServo");
         clawServo = hardwareMap.get(Servo.class, "clawServo");
-        //rotationServo = hardwareMap.get(Servo.class, "rotationServo");
+        rotationServo = hardwareMap.get(Servo.class, "rotationServo");
         wristServo.setPosition(STOWED_WRIST_POS);
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
     }
@@ -76,6 +76,7 @@ public class Claw extends Mechanism {
     public void triggerGamepadBClawMode(){
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
         wristServo.setPosition(STOWED_WRIST_POS);
+        rotationServo.setPosition(0.5);
     }
 
     public boolean triggerGamepadAClawMode(){
@@ -98,7 +99,10 @@ public class Claw extends Mechanism {
 
     public void initUpdateForGrab(){
         if (gamepad.yDown){
-            triggerGamepadYClawMode();
+            clawServo.setPosition(CLAW_GRABBING_POS);
+        }
+        if (gamepad.bDown){
+            clawServo.setPosition(CLAW_NOT_GRABBING_POS);
         }
     }
 }

@@ -47,22 +47,21 @@ public class Arm extends Mechanism {
         this.gamepad = gamepad;
         armPivoter = new ArmPivoter(hardwareMap, gamepad);
         armExtender = new ArmExtender(hardwareMap, gamepad);
-        //claw = new Claw(hardwareMap, gamepad);
+        claw = new Claw(hardwareMap, gamepad);
     }
 
     public Arm(HardwareMap hardwareMap) {
         armPivoter = new ArmPivoter(hardwareMap);
         armExtender = new ArmExtender(hardwareMap);
-        //claw = new Claw(hardwareMap);
+        claw = new Claw(hardwareMap);
     }
 
 
     public boolean updateWithBoolean(Telemetry telemetry) {
         if (gamepad != null){
             if (!isSelectingEndPos) {
-                /*
                     if (claw.triggerGamepadYClawMode()){
-                        //setArmState(ArmState.WALL_GRAB);
+                        setArmState(ArmState.WALL_GRAB);
                     } else if (gamepad.bDown){
                         claw.triggerGamepadBClawMode();
                     } else if (gamepad.aDown){
@@ -70,7 +69,6 @@ public class Arm extends Mechanism {
                             //setArmState(ArmState.SUBMERSIBLE_GRAB);
                         }
                     }
-                 */
             } else {
                 if (isBarSelected) {
                     if (gamepad.upDown) {
@@ -109,7 +107,7 @@ public class Arm extends Mechanism {
         }
         armPivoter.update(telemetry);
         armExtender.update(telemetry, armPivoter.GetCurrPivotInRadians());
-        //claw.update();
+        claw.update();
         return armExtender.isPIDMotorTargetsReached() && armPivoter.isPIDMotorTargetsReached();
     }
 
@@ -121,6 +119,10 @@ public class Arm extends Mechanism {
         armPivoter.SetPivot(armState.pivotPos);
         armExtender.SetExtension(armState.extensionPos);
     }
+
+    //STUFF FOR ROADRUNNER/AUTO IS BELOW
+
+    public Action setArmStateAction(ArmState armState, Telemetry telemetry){ return new SetArmState(telemetry, armState); }
 
     public class SetArmState implements Action {
         private ArmState armState;
@@ -140,7 +142,57 @@ public class Arm extends Mechanism {
         }
     }
 
-    public Action setArmStateAction(ArmState armState, Telemetry telemetry){ return new SetArmState(telemetry, armState); }
+    public Action triggerGamepadAClawModeAction(double rotation){ return new TriggerGamepadAClawMode(rotation); }
+    public Action triggerGamepadAClawModeAction(){ return new TriggerGamepadAClawMode(); }
 
-    //Create claw function triggering functions + set proper arm states for those claw functions
+    public class TriggerGamepadAClawMode implements Action {
+        private double rotation;
+
+        public TriggerGamepadAClawMode(double rotation){
+            super();
+            this.rotation = rotation;
+        }
+
+        public TriggerGamepadAClawMode(){
+            super();
+            this.rotation = .5;
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet){
+            claw.rotationServo.setPosition(rotation);
+            claw.triggerGamepadAClawMode();
+            return false; //False stops the method from looping, true keeps it going
+        }
+    }
+
+    public Action triggerGamepadYClawModeAction(){ return new TriggerGamepadAClawMode(); }
+
+    public class TriggerGamepadYClawMode implements Action {
+
+        public TriggerGamepadYClawMode(){
+            super();
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet){
+            claw.triggerGamepadYClawMode();
+            return false; //False stops the method from looping, true keeps it going
+        }
+    }
+
+    public Action triggerGamepadBClawModeAction(){ return new TriggerGamepadBClawMode(); }
+
+    public class TriggerGamepadBClawMode implements Action {
+
+        public TriggerGamepadBClawMode(){
+            super();
+        }
+
+        @Override
+        public boolean run (@NonNull TelemetryPacket packet){
+            claw.triggerGamepadBClawMode();
+            return false; //False stops the method from looping, true keeps it going
+        }
+    }
 }
