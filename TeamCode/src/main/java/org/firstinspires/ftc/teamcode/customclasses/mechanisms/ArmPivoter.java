@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.PIDMotor;
 public class ArmPivoter extends Mechanism {
     public enum PivotPos{
         DEFAULT_PIVOT(0),
+        SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0.1)),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),

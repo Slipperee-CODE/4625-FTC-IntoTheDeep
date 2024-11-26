@@ -45,7 +45,7 @@ public class ArmExtender extends Mechanism {
     private PIDMotor closePivotPIDMotor = null;
     private DigitalChannel magneticLimitSwitch;
 
-    public static final double P = 0.0045;
+    public static final double P = 0.0075;
     public static final double I = 0.00001;
     public static final double D = 0.00;
 
@@ -54,7 +54,7 @@ public class ArmExtender extends Mechanism {
     private boolean limitSwitchWasActiveLastFrame = false;
 
     private int effectiveCurrentMaxExtension;
-    private final int HORIZONTAL_EXPANSION_LIMIT = 3000; //in ticks
+    private final int HORIZONTAL_EXPANSION_LIMIT = 3500; //in ticks
 
     private final int TOLERANCE = 10; // in ticks
 

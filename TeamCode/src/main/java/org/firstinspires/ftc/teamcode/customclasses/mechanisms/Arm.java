@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.customclasses.helpers.Mechanism;
 public class Arm extends Mechanism {
     public enum ArmState {
         DEFAULT(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.DEFAULT_EXTENSION),
+        SAFE_DEFAULT(ArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, ArmExtender.ExtensionPos.DEFAULT_EXTENSION),
         SUBMERSIBLE_GRAB(ArmPivoter.PivotPos.DEFAULT_PIVOT, ArmExtender.ExtensionPos.SUBMERSIBLE_EXTENSION),
         LOWER_BUCKET(ArmPivoter.PivotPos.LOWER_BUCKET_PIVOT, ArmExtender.ExtensionPos.LOWER_BUCKET_EXTENSION),
         UPPER_BUCKET(ArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, ArmExtender.ExtensionPos.UPPER_BUCKET_EXTENSION),
@@ -56,12 +57,15 @@ public class Arm extends Mechanism {
         claw = new Claw(hardwareMap);
     }
 
-
     public boolean updateWithBoolean(Telemetry telemetry) {
         if (gamepad != null){
             if (!isSelectingEndPos) {
-                    if (claw.triggerGamepadYClawMode()){
-                        setArmState(ArmState.WALL_GRAB);
+                    if (gamepad.yDown){
+                        if (claw.triggerGamepadYClawMode()){
+                            setArmState(ArmState.WALL_GRAB);
+                        } else {
+                            setArmState(ArmState.DEFAULT);
+                        }
                     } else if (gamepad.bDown){
                         claw.triggerGamepadBClawMode();
                     } else if (gamepad.aDown){
@@ -93,7 +97,11 @@ public class Arm extends Mechanism {
             if (gamepad.xDown) {
                 isSelectingEndPos = false;
                 isBarSelected = false;
-                setArmState(ArmState.DEFAULT);
+                if (gamepad.gamepad.left_trigger > 0) {
+                    setArmState(ArmState.DEFAULT);
+                } else {
+                    setArmState(ArmState.SAFE_DEFAULT);
+                }
             }
 
             if (gamepad.leftDown || gamepad.rightDown) {

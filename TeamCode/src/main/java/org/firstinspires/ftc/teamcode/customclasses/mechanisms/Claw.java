@@ -17,9 +17,9 @@ public class Claw extends Mechanism {
     private static final float STOWED_WITH_SPECIMEN_WRIST_POS = 0.5f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
-    private static final float SPECIMEN_GRAB_WRIST_POS = 0.25f; //was .4 for Meet 2
+    private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2
 
-    private static final float CLAW_NOT_GRABBING_POS = 0.0f;
+    private static final float CLAW_NOT_GRABBING_POS = 0.1f;
     private static final float CLAW_GRABBING_POS = 0.295f;
 
     private static final float ROTATIONAL_LIMIT = 0.5f;
@@ -76,7 +76,7 @@ public class Claw extends Mechanism {
     public void triggerGamepadBClawMode(){
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
         wristServo.setPosition(STOWED_WRIST_POS);
-        rotationServo.setPosition(0.5);
+        //rotationServo.setPosition(0.5);
     }
 
     public boolean triggerGamepadAClawMode(){

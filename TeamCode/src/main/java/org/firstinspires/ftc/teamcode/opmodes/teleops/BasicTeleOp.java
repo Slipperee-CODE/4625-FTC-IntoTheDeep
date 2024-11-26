@@ -39,7 +39,8 @@ public class BasicTeleOp extends CustomOpMode
 
     @Override
     public void init_loop(){
-        //arm.claw.initUpdateForGrab();
+        arm.claw.initUpdateForGrab();
+        gamepad2.update();
     }
 
     @Override
