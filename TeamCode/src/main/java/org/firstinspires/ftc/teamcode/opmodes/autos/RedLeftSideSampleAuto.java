@@ -12,11 +12,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.WaitingAuto;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Arm;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
 @Autonomous(name = "RedLeftSideSampleAuto", group = "Autonomous")
 public class RedLeftSideSampleAuto extends WaitingAuto {
-    private Arm arm;
+    private RRArm arm;
     private CustomGamepad gamepad2;
 
     private Action initialTrajectory;
@@ -34,7 +36,7 @@ public class RedLeftSideSampleAuto extends WaitingAuto {
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
-        arm = new Arm(hardwareMap, gamepad2);
+        arm = new RRArm(hardwareMap, runningActions, gamepad2);
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-9, -64, Math.PI/2));
 
@@ -62,8 +64,6 @@ public class RedLeftSideSampleAuto extends WaitingAuto {
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(-24, 8, 0),0)
                 .build();
-
-        //Actions.runBlocking(exampleMechanism.activateAction());
     }
 
     @Override
@@ -78,13 +78,13 @@ public class RedLeftSideSampleAuto extends WaitingAuto {
         Actions.runBlocking(
                 new SequentialAction(
                     new ParallelAction(
-                        arm.setArmStateAction(Arm.ArmState.UPPER_BAR, telemetry),
+                        arm.setArmState(RRArm.ArmState.UPPER_BAR),
                         initialTrajectory
                     ),
-                    arm.triggerGamepadBClawModeAction(),
+                    arm.claw.setClawState(RRClaw.ClawPos.RESET),
 
                     new ParallelAction(
-                        arm.setArmStateAction(Arm.ArmState.AUTO_FIRST_SAMPLE, telemetry),
+                        arm.setArmState(RRArm.ArmState.AUTO_FIRST_SAMPLE),
                         moveToFirstSamplePickup
                     ),
                     new SequentialAction(

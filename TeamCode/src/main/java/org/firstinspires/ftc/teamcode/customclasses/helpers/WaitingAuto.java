@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.customclasses.helpers;
 
-public abstract class WaitingAuto extends CustomOpMode {
+public abstract class WaitingAuto extends RRCustomOpMode {
     protected CustomGamepad gamepadOne;
 
     private final Clock __delayTimer = new Clock();
