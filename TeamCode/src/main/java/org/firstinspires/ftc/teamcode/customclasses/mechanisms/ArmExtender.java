@@ -45,7 +45,7 @@ public class ArmExtender extends Mechanism {
     private PIDMotor closePivotPIDMotor = null;
     private DigitalChannel magneticLimitSwitch;
 
-    public static final double P = 0.0075;
+    public static final double P = 0.01;
     public static final double I = 0.00001;
     public static final double D = 0.00;
 
@@ -93,6 +93,7 @@ public class ArmExtender extends Mechanism {
     public void update(Telemetry telemetry, double approxCurrPivotInRadians) {
         if (gamepad != null) {
             float right_stick_y = -gamepad.right_stick_y;
+            float left_stick_y = -gamepad.left_stick_y;
             effectiveCurrentMaxExtension = Math.max((int)
                     Math.min((double) MAX_EXTENSION.pos, HORIZONTAL_EXPANSION_LIMIT/Math.cos(Math.min(approxCurrPivotInRadians, Math.PI/2-0.001)))
                     , 0);
@@ -112,8 +113,23 @@ public class ArmExtender extends Mechanism {
 
                 farPivotPIDMotor.setTarget(clippedLeft);
                 closePivotPIDMotor.setTarget(clippedRight);
-            }
+            } else if (left_stick_y != 0){
+                int targetLeft = farPivotPIDMotor.getTarget() + (int) (left_stick_y * SPEED/2);
+                int targetRight = closePivotPIDMotor.getTarget() + (int) (left_stick_y * SPEED/2);
 
+                int clippedLeft, clippedRight;
+                if (gamepad.gamepad.right_trigger > 0) {
+                    clippedRight = Math.min(targetRight, MAX_EXTENSION.pos);
+                    clippedLeft = Math.min(targetLeft, MAX_EXTENSION.pos);
+                } else {
+                    clippedRight = Range.clip(targetRight, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
+                    clippedLeft = Range.clip(targetLeft, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
+                    //NOT YET USING EFFECTIVE CURRENT MAX EXTENSION
+                }
+
+                farPivotPIDMotor.setTarget(clippedLeft);
+                closePivotPIDMotor.setTarget(clippedRight);
+            }
             telemetry.addData("approxCurrPivotInRadians", approxCurrPivotInRadians);
             telemetry.addData("effectiveCurrentMaxExtension", effectiveCurrentMaxExtension);
         }

@@ -19,16 +19,18 @@ public class Claw extends Mechanism {
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2
 
-    private static final float CLAW_NOT_GRABBING_POS = 0.1f;
-    private static final float CLAW_GRABBING_POS = 0.295f;
+    private static final float CLAW_NOT_GRABBING_POS = 0.15f;
+    private static final float CLAW_GRABBING_POS = 0.45f;
 
-    private static final float ROTATIONAL_LIMIT = 0.5f;
+    private static final float ROTATIONAL_LIMIT = 1f;
+    private static final float DEFAULT_ROTATION = 0.5f;
 
     private final Servo wristServo;
     private final Servo clawServo;
     public final Servo rotationServo;
 
     private boolean isGamepadYClawModeActive = false;
+    private boolean isGamepadYSpecimenClawModeActive = false;
     private boolean isGamepadAClawModeActive = false;
 
     public Claw(HardwareMap hardwareMap, CustomGamepad gamepad){
@@ -42,12 +44,13 @@ public class Claw extends Mechanism {
         rotationServo = hardwareMap.get(Servo.class, "rotationServo");
         wristServo.setPosition(STOWED_WRIST_POS);
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
+        rotationServo.setPosition(DEFAULT_ROTATION);
     }
 
     @Override
     public void update() {
         if (isGamepadAClawModeActive) {
-            //rotationServo.setPosition(gamepad.right_stick_x * ROTATIONAL_LIMIT);
+            rotationServo.setPosition(Math.min(1, (gamepad.left_stick_x*.5+0.5)) * ROTATIONAL_LIMIT);
         }
     }
 
@@ -63,7 +66,7 @@ public class Claw extends Mechanism {
             isGamepadYClawModeActive = false;
             clawServo.setPosition(CLAW_GRABBING_POS);
             wristServo.setPosition(STOWED_WITH_SPECIMEN_WRIST_POS);
-
+            rotationServo.setPosition(DEFAULT_ROTATION);
         } else {
             isGamepadYClawModeActive = true;
             clawServo.setPosition(CLAW_NOT_GRABBING_POS);
@@ -76,7 +79,9 @@ public class Claw extends Mechanism {
     public void triggerGamepadBClawMode(){
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
         wristServo.setPosition(STOWED_WRIST_POS);
-        //rotationServo.setPosition(0.5);
+        rotationServo.setPosition(DEFAULT_ROTATION);
+        isGamepadAClawModeActive = false;
+        isGamepadYClawModeActive = false;
     }
 
     public boolean triggerGamepadAClawMode(){
@@ -86,6 +91,7 @@ public class Claw extends Mechanism {
             isGamepadAClawModeActive = false;
             clawServo.setPosition(CLAW_GRABBING_POS);
             wristServo.setPosition(STOWED_WITH_SAMPLE_WRIST_POS);
+            rotationServo.setPosition(DEFAULT_ROTATION);
         } else {
             isGamepadAClawModeActive = true;
             //The below setPositions need to be delayed to allow for reach to extend over bar, same with retraction but reversed
@@ -95,6 +101,15 @@ public class Claw extends Mechanism {
         }
 
         return isGamepadAClawModeActive;
+    }
+
+    public void triggerGamepadYSpecimenClawMode(){
+        isGamepadYSpecimenClawModeActive = !isGamepadYSpecimenClawModeActive;
+        if (isGamepadYSpecimenClawModeActive){
+            wristServo.setPosition(SPECIMEN_GRAB_WRIST_POS);
+        } else {
+            wristServo.setPosition(STOWED_WITH_SPECIMEN_WRIST_POS);
+        }
     }
 
     public void initUpdateForGrab(){

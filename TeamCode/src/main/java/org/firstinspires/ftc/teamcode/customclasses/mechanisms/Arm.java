@@ -37,6 +37,8 @@ public class Arm extends Mechanism {
         }
     }
 
+    private ArmState CURR_STATE = ArmState.DEFAULT;
+
     private ArmPivoter armPivoter = null;
     private ArmExtender armExtender = null;
     public Claw claw = null;
@@ -61,10 +63,15 @@ public class Arm extends Mechanism {
         if (gamepad != null){
             if (!isSelectingEndPos) {
                     if (gamepad.yDown){
-                        if (claw.triggerGamepadYClawMode()){
-                            setArmState(ArmState.WALL_GRAB);
-                        } else {
-                            setArmState(ArmState.DEFAULT);
+                        if (CURR_STATE == ArmState.LOWER_BAR || CURR_STATE == ArmState.UPPER_BAR || CURR_STATE == ArmState.LOWER_BUCKET || CURR_STATE == ArmState.UPPER_BUCKET){
+                            claw.triggerGamepadYSpecimenClawMode();
+                        }
+                        else {
+                            if (claw.triggerGamepadYClawMode()){
+                                setArmState(ArmState.WALL_GRAB);
+                            } else {
+                                setArmState(ArmState.DEFAULT);
+                            }
                         }
                     } else if (gamepad.bDown){
                         claw.triggerGamepadBClawMode();
@@ -126,6 +133,7 @@ public class Arm extends Mechanism {
     public void setArmState(ArmState armState){
         armPivoter.SetPivot(armState.pivotPos);
         armExtender.SetExtension(armState.extensionPos);
+        CURR_STATE = armState;
     }
 
     //STUFF FOR ROADRUNNER/AUTO IS BELOW
