@@ -17,8 +17,6 @@ public class BasicTeleOp extends CustomOpMode
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
     private Arm arm;
-    private AprilTagAlign tagAlign;
-    private MultiProcessorWebcam multiProcessorWebcam;
 
     @Override
     public void init(){
@@ -27,14 +25,6 @@ public class BasicTeleOp extends CustomOpMode
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new Arm(hardwareMap, gamepad2);
-        /*
-        tagAlign = new AprilTagAlign(hardwareMap,telemetry,gamepad1,robotDrivetrain);
-
-        multiProcessorWebcam = new MultiProcessorWebcam(hardwareMap);
-        multiProcessorWebcam.setActiveProcessor(MultiProcessorWebcam.Processor.APRIL_TAG);
-        multiProcessorWebcam.setExposure(2);
-        multiProcessorWebcam.setGain(0);
-        */
     }
 
     @Override
@@ -62,15 +52,6 @@ public class BasicTeleOp extends CustomOpMode
         } else {
             robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 0.85);
         }
-
-        /*
-        if (gamepad1.gamepad.right_trigger > 0.3 ) {
-            tagAlign.setState(AprilTagAlign.TagAlignState.NEAREST);
-        } else {
-            tagAlign.setState(AprilTagAlign.TagAlignState.OFF);
-        }
-        multiProcessorWebcam.update();
-        */
 
         arm.updateWithBoolean(telemetry);
         telemetry.update();
