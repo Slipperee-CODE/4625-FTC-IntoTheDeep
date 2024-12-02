@@ -81,56 +81,7 @@ public class RedLeftSideSampleAuto extends WaitingAuto {
                         arm.setArmState(RRArm.ArmState.UPPER_BAR),
                         initialTrajectory
                     ),
-                    arm.claw.setClawState(RRClaw.ClawPos.RESET),
-
-                    new ParallelAction(
-                        arm.setArmState(RRArm.ArmState.AUTO_FIRST_SAMPLE),
-                        moveToFirstSamplePickup
-                    ),
-                    new SequentialAction(
-                        arm.triggerGamepadAClawModeAction(),
-                        new SleepAction(1),
-                        arm.triggerGamepadAClawModeAction()
-                    ),
-                    new ParallelAction(
-                            arm.setArmStateAction(Arm.ArmState.UPPER_BUCKET, telemetry),
-                            moveToFirstSamplePlace
-                    ),
-                    arm.triggerGamepadBClawModeAction(),
-
-                    new ParallelAction(
-                        arm.setArmStateAction(Arm.ArmState.AUTO_SECOND_SAMPLE, telemetry),
-                        moveToSecondSamplePickup
-                    ),
-                    new SequentialAction(
-                            arm.triggerGamepadAClawModeAction(),
-                            new SleepAction(1),
-                            arm.triggerGamepadAClawModeAction()
-                    ),
-                    new ParallelAction(
-                            arm.setArmStateAction(Arm.ArmState.UPPER_BUCKET, telemetry),
-                            moveToSecondSamplePlace
-                    ),
-                    arm.triggerGamepadBClawModeAction(),
-
-                    new ParallelAction(
-                        arm.setArmStateAction(Arm.ArmState.AUTO_THIRD_SAMPLE, telemetry),
-                        moveToThirdSamplePickup
-                    ),
-                    new SequentialAction(
-                            arm.triggerGamepadAClawModeAction(.75),
-                            new SleepAction(1),
-                            arm.triggerGamepadAClawModeAction()
-                    ),
-                    new ParallelAction(
-                            arm.setArmStateAction(Arm.ArmState.UPPER_BUCKET, telemetry),
-                            moveToThirdSamplePlace
-                    ),
-                    arm.triggerGamepadBClawModeAction(),
-                    new ParallelAction(
-                           arm.setArmStateAction(Arm.ArmState.LOWER_BUCKET, telemetry),
-                           park
-                    )
+                    arm.claw.setClawState(RRClaw.ClawPos.RESET)
                 )
         );
     }
