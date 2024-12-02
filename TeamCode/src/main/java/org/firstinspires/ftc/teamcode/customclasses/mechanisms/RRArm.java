@@ -46,7 +46,7 @@ public class RRArm extends RRMechanism {
     private boolean isSelectingEndPos = false;
     private boolean isBarSelected = false;
 
-    public RRArm(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad) {
+    public RRArm(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad) { //add persistent action list of PID motor updating here (replace runningActions with persistentActions)
         this.gamepad = gamepad;
         this.runningActions = runningActions;
         armPivoter = new RRArmPivoter(hardwareMap, runningActions, gamepad);
