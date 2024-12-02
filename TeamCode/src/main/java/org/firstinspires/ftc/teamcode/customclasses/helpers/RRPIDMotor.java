@@ -52,7 +52,7 @@ public class RRPIDMotor {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 update();
-                return hasReachedTarget();
+                return !hasReachedTarget();
             }
         };
     }
