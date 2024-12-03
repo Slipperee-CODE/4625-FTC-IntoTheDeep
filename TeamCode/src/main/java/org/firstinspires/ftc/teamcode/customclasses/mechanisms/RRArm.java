@@ -55,8 +55,9 @@ public class RRArm extends RRMechanism {
         claw = new RRClaw(hardwareMap, runningActions, gamepad);
     }
 
+    @Override
     public void queueActions() {
-        if (!isSelectingEndPos) {
+        if (!isSelectingEndPos) { //check these if statements
             if (gamepad.yDown) {
                 if (CURR_STATE == ArmState.LOWER_BAR || CURR_STATE == ArmState.UPPER_BAR || CURR_STATE == ArmState.LOWER_BUCKET || CURR_STATE == ArmState.UPPER_BUCKET) {
                     //runningActions.add(PlaceSample/Specimen Action)
@@ -74,7 +75,8 @@ public class RRArm extends RRMechanism {
             }
             else if (gamepad.bDown) {
                 runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
-        } else if (gamepad.aDown) {
+            }
+            else if (gamepad.aDown) {
                 if (!gamepad.aToggle) {
                     runningActions.add(
                             setupForSampleGrab(0.5f)
