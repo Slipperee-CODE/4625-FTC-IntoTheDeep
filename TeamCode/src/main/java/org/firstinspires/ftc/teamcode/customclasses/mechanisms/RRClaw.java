@@ -100,5 +100,10 @@ public class RRClaw extends RRMechanism {
     public void queueActions() {
 
     }
+
+    @Override
+    public Action queueUpdateActions() {
+        return null;
+    }
 }
 

@@ -32,6 +32,11 @@ public class RRBasicTeleOp extends RRCustomOpMode
     }
 
     @Override
+    public void start(){
+        runningActions.add(arm.queueUpdateActions());
+    }
+
+    @Override
     public void loop() {
         gamepad1.update();
         gamepad2.update();
@@ -52,7 +57,6 @@ public class RRBasicTeleOp extends RRCustomOpMode
         }
 
         arm.queueActions();
-        telemetry.update();
         runActions();
     }
 }

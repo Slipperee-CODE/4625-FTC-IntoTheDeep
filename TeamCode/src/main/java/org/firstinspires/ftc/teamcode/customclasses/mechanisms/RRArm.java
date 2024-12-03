@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -46,7 +47,7 @@ public class RRArm extends RRMechanism {
     private boolean isSelectingEndPos = false;
     private boolean isBarSelected = false;
 
-    public RRArm(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad) { //add persistent action list of PID motor updating here (replace runningActions with persistentActions)
+    public RRArm(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad) {
         this.gamepad = gamepad;
         this.runningActions = runningActions;
         armPivoter = new RRArmPivoter(hardwareMap, runningActions, gamepad);
@@ -54,98 +55,96 @@ public class RRArm extends RRMechanism {
         claw = new RRClaw(hardwareMap, runningActions, gamepad);
     }
 
-    public RRArm(HardwareMap hardwareMap) {
-        armPivoter = new RRArmPivoter(hardwareMap);
-        armExtender = new RRArmExtender(hardwareMap);
-        claw = new RRClaw(hardwareMap);
-    }
-
     public void queueActions() {
-        if (gamepad != null) {
-            if (!isSelectingEndPos) {
-                if (gamepad.yDown) {
-                    if (CURR_STATE == ArmState.LOWER_BAR || CURR_STATE == ArmState.UPPER_BAR || CURR_STATE == ArmState.LOWER_BUCKET || CURR_STATE == ArmState.UPPER_BUCKET) {
-                        //runningActions.add(PlaceSample/Specimen Action)
-                    } else {
-                        if (gamepad.yDown){
-                            if (!gamepad.yToggle){
-                                runningActions.add(
-                                        setupForSpecimenGrab()
-                                );
-                            } else {
-                                runningActions.add(
-                                        grabSpecimen()
-                                );
-                            }
-                        }
-                    }
-                } else if (gamepad.bDown) {
-                    runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
-                } else if (gamepad.aDown) {
-                    if (!gamepad.aToggle){
+        if (!isSelectingEndPos) {
+            if (gamepad.yDown) {
+                if (CURR_STATE == ArmState.LOWER_BAR || CURR_STATE == ArmState.UPPER_BAR || CURR_STATE == ArmState.LOWER_BUCKET || CURR_STATE == ArmState.UPPER_BUCKET) {
+                    //runningActions.add(PlaceSample/Specimen Action)
+                } else {
+                    if (!gamepad.yToggle) {
                         runningActions.add(
-                                setupForSampleGrab(0.5f)
+                                setupForSpecimenGrab()
                         );
                     } else {
                         runningActions.add(
+                                grabSpecimen()
+                        );
+                    }
+                }
+            }
+            else if (gamepad.bDown) {
+                runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
+        } else if (gamepad.aDown) {
+                if (!gamepad.aToggle) {
+                    runningActions.add(
+                            setupForSampleGrab(0.5f)
+                    );
+                } else {
+                    runningActions.add(
                             grabSample()
-                        );
-                    }
+                    );
+                }
+            }
+        } else {
+            if (isBarSelected) {
+                if (gamepad.upDown) {
+                    setArmState(ArmState.UPPER_BAR);
+                    isSelectingEndPos = false;
+                } else if (gamepad.downDown) {
+                    setArmState(ArmState.LOWER_BAR);
+                    isSelectingEndPos = false;
                 }
             } else {
-                if (isBarSelected) {
-                    if (gamepad.upDown) {
-                        runningActions.add(setArmState(ArmState.UPPER_BAR));
-                        isSelectingEndPos = false;
-                    } else if (gamepad.downDown) {
-                        runningActions.add(setArmState(ArmState.LOWER_BAR));
-                        isSelectingEndPos = false;
-                    }
-                } else {
-                    if (gamepad.upDown) {
-                        runningActions.add(setArmState(ArmState.UPPER_BUCKET));
-                        isSelectingEndPos = false;
-                    } else if (gamepad.downDown) {
-                        runningActions.add(setArmState(ArmState.LOWER_BUCKET));
-                        isSelectingEndPos = false;
-                    }
+                if (gamepad.upDown) {
+                    setArmState(ArmState.UPPER_BUCKET);
+                    isSelectingEndPos = false;
+                } else if (gamepad.downDown) {
+                    setArmState(ArmState.LOWER_BUCKET);
+                    isSelectingEndPos = false;
                 }
             }
+        }
 
-            if (gamepad.xDown) {
-                isSelectingEndPos = false;
+        if (gamepad.xDown) {
+            isSelectingEndPos = false;
+            isBarSelected = false;
+            if (gamepad.gamepad.left_trigger > 0) {
+                setArmState(ArmState.DEFAULT);
+            } else {
+                setArmState(ArmState.SAFE_DEFAULT);
+            }
+        }
+
+        if (gamepad.leftDown || gamepad.rightDown) {
+            isSelectingEndPos = true;
+            if (gamepad.rightDown) {
+                isBarSelected = true;
+            } else if (gamepad.leftDown) {
                 isBarSelected = false;
-                if (gamepad.gamepad.left_trigger > 0) {
-                    runningActions.add(setArmState(ArmState.DEFAULT));
-                } else {
-                    runningActions.add(setArmState(ArmState.SAFE_DEFAULT));
-                }
             }
-
-            if (gamepad.leftDown || gamepad.rightDown) {
-                isSelectingEndPos = true;
-                if (gamepad.rightDown) {
-                    isBarSelected = true;
-                } else if (gamepad.leftDown) {
-                    isBarSelected = false;
-                }
-            }
-            if (gamepad.aToggle){ runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x)); }
+        }
+        if (gamepad.aToggle) {
+            runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x));
         }
     }
 
-    public Action setArmState(ArmState armState) {
+    public void setArmState(ArmState armState) {
         CURR_STATE = armState;
+        armPivoter.SetPivot(armState.pivotPos);
+        armExtender.SetExtension(armState.extensionPos);
+    }
+
+    public Action queueUpdateActions(){
         return new ParallelAction(
-                armPivoter.SetPivot(armState.pivotPos),
-                armExtender.SetExtension(armState.extensionPos)
+            armPivoter.queueUpdateActions(),
+            armExtender.queueUpdateActions()
         );
     }
 
     public Action setupForSpecimenGrab(){
         return new ParallelAction(
                 claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
-                setArmState(ArmState.WALL_GRAB)
+                new InstantAction(() -> setArmState(ArmState.WALL_GRAB))
         );
     }
 
@@ -154,7 +153,7 @@ public class RRArm extends RRMechanism {
                 claw.setClawState(RRClaw.ClawPos.SPECIMEN_GRAB),
                 new SleepAction(0.25),
                 claw.setClawState(RRClaw.ClawPos.POST_GRAB),
-                setArmState(ArmState.DEFAULT)
+                new InstantAction(() -> setArmState(ArmState.DEFAULT))
         );
     }
 

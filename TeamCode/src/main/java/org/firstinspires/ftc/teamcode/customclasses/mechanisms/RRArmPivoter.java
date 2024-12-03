@@ -76,11 +76,9 @@ public class RRArmPivoter extends RRMechanism {
         return (int) (TICKS_FOR_90_DEGREES*percentOf90);
     }
 
-    public Action SetPivot(PivotPos pivotPos){
-        return new ParallelAction(
-                leftPivotPIDMotor.setTarget(pivotPos.pos),
-                rightPivotPIDMotor.setTarget(pivotPos.pos)
-        );
+    public void SetPivot(PivotPos pivotPos){
+        leftPivotPIDMotor.setTarget(pivotPos.pos);
+        rightPivotPIDMotor.setTarget(pivotPos.pos);
     }
     
     public double GetCurrPivotInRadians(){
@@ -90,5 +88,13 @@ public class RRArmPivoter extends RRMechanism {
     @Override
     public void queueActions() {
 
+    }
+
+    @Override
+    public Action queueUpdateActions() {
+        return new ParallelAction(
+                leftPivotPIDMotor.updateAction(),
+                rightPivotPIDMotor.updateAction()
+        );
     }
 }

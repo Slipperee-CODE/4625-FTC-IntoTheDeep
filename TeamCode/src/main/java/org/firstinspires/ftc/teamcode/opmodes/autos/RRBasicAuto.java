@@ -2,22 +2,21 @@ package org.firstinspires.ftc.teamcode.opmodes.autos;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.WaitingAuto;
-import org.firstinspires.ftc.teamcode.customclasses.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
-@Autonomous(name = "RedLeftSideSampleAuto", group = "Autonomous")
-public class RedLeftSideSampleAuto extends WaitingAuto {
+@Autonomous(name = "RRBasicAuto", group = "Autonomous")
+public class RRBasicAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
 
@@ -76,12 +75,16 @@ public class RedLeftSideSampleAuto extends WaitingAuto {
     @Override
     protected void startAfterWait() {
         Actions.runBlocking(
-                new SequentialAction(
-                    new ParallelAction(
-                        arm.setArmState(RRArm.ArmState.UPPER_BAR),
-                        initialTrajectory
-                    ),
-                    arm.claw.setClawState(RRClaw.ClawPos.RESET)
+                new ParallelAction(
+                        arm.queueUpdateActions(),
+                        new SequentialAction(
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
+                                initialTrajectory,
+                                arm.claw.setClawState(RRClaw.ClawPos.RESET)
+                                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
+                                //moveToFirstSamplePickup,
+                                //arm.setupForSampleGrab(0.5f)
+                        )
                 )
         );
     }

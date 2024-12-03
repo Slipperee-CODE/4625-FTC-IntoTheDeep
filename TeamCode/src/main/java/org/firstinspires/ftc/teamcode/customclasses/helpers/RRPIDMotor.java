@@ -44,15 +44,18 @@ public class RRPIDMotor {
         this.motor.setPower(power);
     }
 
-    public Action setTarget(int target) {
+    public void setTarget(int target) {
         if (target != this.target) {
             this.target = target; this.errorSum = 0;
         }
+    }
+
+    public Action updateAction(){
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 update();
-                return !hasReachedTarget();
+                return true;
             }
         };
     }

@@ -112,10 +112,9 @@ public class RRArmExtender extends RRMechanism {
                     //NOT YET USING EFFECTIVE CURRENT MAX EXTENSION
                 }
 
-                runningActions.add(new ParallelAction(
-                        farPivotPIDMotor.setTarget(clippedLeft),
-                        closePivotPIDMotor.setTarget(clippedRight)
-                )); //this is definitely going to break something if you go forwards then backwards
+
+                farPivotPIDMotor.setTarget(clippedLeft);
+                closePivotPIDMotor.setTarget(clippedRight);
             }
         }
 
@@ -128,15 +127,21 @@ public class RRArmExtender extends RRMechanism {
         }
     }
 
-    public Action SetExtension(ExtensionPos extensionPos){
-        return new ParallelAction(
-            farPivotPIDMotor.setTarget(extensionPos.pos),
-            closePivotPIDMotor.setTarget(extensionPos.pos)
-        );
+    public void SetExtension(ExtensionPos extensionPos){
+        farPivotPIDMotor.setTarget(extensionPos.pos);
+        closePivotPIDMotor.setTarget(extensionPos.pos);
     }
 
     @Override
     public void queueActions() {
 
+    }
+
+    @Override
+    public Action queueUpdateActions() {
+        return new ParallelAction(
+            farPivotPIDMotor.updateAction(),
+            closePivotPIDMotor.updateAction()
+        );
     }
 }

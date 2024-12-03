@@ -13,7 +13,5 @@ public abstract class RRMechanism {
 
     public abstract void queueActions();
 
-    public void queueActions(Telemetry telemetry){
-        queueActions();
-    }
+    public abstract Action queueUpdateActions();
 }
