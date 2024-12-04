@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -10,9 +7,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.helpers.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.RRMechanism;
 
 import java.util.List;
@@ -59,9 +54,6 @@ public class RRArm extends RRMechanism {
     public void queueActions() {
         if (!isSelectingEndPos) { //check these if statements
             if (gamepad.yDown) {
-                if (CURR_STATE == ArmState.LOWER_BAR || CURR_STATE == ArmState.UPPER_BAR || CURR_STATE == ArmState.LOWER_BUCKET || CURR_STATE == ArmState.UPPER_BUCKET) {
-                    //runningActions.add(PlaceSample/Specimen Action)
-                } else {
                     if (!gamepad.yToggle) {
                         //runningActions.add(
                                 //setupForSpecimenGrab()
@@ -71,7 +63,6 @@ public class RRArm extends RRMechanism {
                                 //grabSpecimen()
                         //);
                     }
-                }
             }
             else if (gamepad.bDown) {
                 //runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
@@ -100,9 +91,15 @@ public class RRArm extends RRMechanism {
                 if (gamepad.upDown) {
                     setArmState(ArmState.UPPER_BUCKET);
                     isSelectingEndPos = false;
+                    //runningActions.add(
+                            //preSampleDeposit()
+                    //);
                 } else if (gamepad.downDown) {
                     setArmState(ArmState.LOWER_BUCKET);
                     isSelectingEndPos = false;
+                    //runningActions.add(
+                            //preSampleDeposit()
+                    //);
                 }
             }
         }
@@ -172,6 +169,12 @@ public class RRArm extends RRMechanism {
                 claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
                 new SleepAction(0.25),
                 claw.setClawState(RRClaw.ClawPos.POST_GRAB)
+        );
+    }
+
+    public Action preSampleDeposit(){
+        return new SequentialAction(
+                claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT)
         );
     }
 }

@@ -8,9 +8,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
-import org.firstinspires.ftc.teamcode.customclasses.helpers.Mechanism;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.RRMechanism;
 
 import java.util.List;
@@ -21,7 +19,8 @@ public class RRClaw extends RRMechanism {
         SPECIMEN_GRAB(SPECIMEN_GRAB_WRIST_POS, CLAW_GRABBING_POS),
         PRE_SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_NOT_GRABBING_POS),
         SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS, -1),
-        POST_GRAB(STOWED_WITH_SAMPLE_OR_SPECIMEN_WRIST_POS, CLAW_GRABBING_POS),
+        POST_GRAB(STOWED_WRIST_POS, CLAW_GRABBING_POS),
+        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS),
         RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS);
 
         float wristServoPos, clawServoPos, rotationServoPos;
@@ -39,7 +38,7 @@ public class RRClaw extends RRMechanism {
     }
 
     private static final float STOWED_WRIST_POS = .7f;
-    private static final float STOWED_WITH_SAMPLE_OR_SPECIMEN_WRIST_POS = 0.5f;
+    private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.5f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2
