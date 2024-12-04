@@ -52,7 +52,7 @@ public class RRArm extends RRMechanism {
         this.runningActions = runningActions;
         armPivoter = new RRArmPivoter(hardwareMap, runningActions, gamepad);
         armExtender = new RRArmExtender(hardwareMap, runningActions, gamepad);
-        claw = new RRClaw(hardwareMap, runningActions, gamepad);
+        //claw = new RRClaw(hardwareMap, runningActions, gamepad);
     }
 
     @Override
@@ -63,28 +63,28 @@ public class RRArm extends RRMechanism {
                     //runningActions.add(PlaceSample/Specimen Action)
                 } else {
                     if (!gamepad.yToggle) {
-                        runningActions.add(
-                                setupForSpecimenGrab()
-                        );
+                        //runningActions.add(
+                                //setupForSpecimenGrab()
+                        //);
                     } else {
-                        runningActions.add(
-                                grabSpecimen()
-                        );
+                        //runningActions.add(
+                                //grabSpecimen()
+                        //);
                     }
                 }
             }
             else if (gamepad.bDown) {
-                runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
+                //runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
             }
             else if (gamepad.aDown) {
                 if (!gamepad.aToggle) {
-                    runningActions.add(
-                            setupForSampleGrab(0.5f)
-                    );
+                    //runningActions.add(
+                            //setupForSampleGrab(0.5f)
+                    //);
                 } else {
-                    runningActions.add(
-                            grabSample()
-                    );
+                    //runningActions.add(
+                            //grabSample()
+                    //);
                 }
             }
         } else {
@@ -126,8 +126,9 @@ public class RRArm extends RRMechanism {
             }
         }
         if (gamepad.aToggle) {
-            runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x));
+            //runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x));
         }
+        armExtender.update(armPivoter.GetCurrPivotInRadians());
     }
 
     public void setArmState(ArmState armState) {

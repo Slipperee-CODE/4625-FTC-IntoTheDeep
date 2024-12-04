@@ -27,8 +27,8 @@ public class RRBasicTeleOp extends RRCustomOpMode
 
     @Override
     public void init_loop(){
-        arm.claw.initUpdateForGrab();
-        gamepad2.update();
+        //arm.claw.initUpdateForGrab();
+        //gamepad2.update();
     }
 
     @Override
