@@ -37,7 +37,7 @@ public class RRBasicAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, runningActions, gamepad2);
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-9, -64, Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, Math.PI/2));
     }
 
     @Override
