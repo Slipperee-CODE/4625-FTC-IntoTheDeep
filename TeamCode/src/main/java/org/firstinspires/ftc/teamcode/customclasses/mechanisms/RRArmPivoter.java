@@ -36,7 +36,7 @@ public class RRArmPivoter extends RRMechanism {
 
     public static final double P = 0.0045;
     public static final double I = 0.00001;
-    public static final double D = 0.00; //Increase this value starting at a very small number to dampen all changes
+    public static final double D = 0.000015; //0.000025 was pretty good
 
     private static final double TICKS_PER_REV = 384.5;
     private static final int SMALL_PULLEY_TEETH = 18;
