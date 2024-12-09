@@ -1,6 +1,7 @@
 package com.intothedeep.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -18,8 +19,24 @@ public class MeepMeepTesting {
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -64, -Math.PI/2))
                 .lineToYConstantHeading(-34)
                 .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(36, -40, Math.PI/4), 0)
+                .splineToLinearHeading(new Pose2d(30, -40, -Math.PI/2), 0)
+                        .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
+                .lineToX(46.5)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(56, -6, -Math.PI/2), 0)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(61, -6, -Math.PI/2), 0)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), 0)
                 .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
+                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
+                                .build());
+                /*
                 .turn(Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(45, -40, Math.PI/4), 0)
                 .waitSeconds(1)
@@ -40,6 +57,8 @@ public class MeepMeepTesting {
                 .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(46, -52, -Math.PI/2), -Math.PI/2)
                         .build());
+
+                 */
 
                 /*
                 .splineToLinearHeading(new Pose2d(9, -46, Math.toRadians(90)),0)

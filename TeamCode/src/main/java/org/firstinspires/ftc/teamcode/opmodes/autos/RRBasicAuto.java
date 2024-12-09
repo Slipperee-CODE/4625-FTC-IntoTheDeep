@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -37,14 +39,40 @@ public class RRBasicAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, runningActions, gamepad2);
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, -Math.PI/2));
+
+        moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+                .lineToYConstantHeading(-38)
+                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(34, -40, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
+                .lineToX(46.5)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                /*
+                .lineToX(46.5)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(56, -6, -Math.PI/2), 0)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(61, -6, -Math.PI/2), 0)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), 0)
+                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
+                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
+                */
+                .build();
     }
 
     @Override
     public void init_loop() {
         super.init_loop();
         gamepad2.update();
-        arm.claw.initUpdateForGrab();
+        //arm.claw.initUpdateForGrab();
     }
 
     @Override
@@ -54,8 +82,9 @@ public class RRBasicAuto extends WaitingAuto {
                         arm.queueUpdateActions(),
                         new SequentialAction(
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
-                                initialTrajectory,
-                                arm.claw.setClawState(RRClaw.ClawPos.RESET)
+                                new SleepAction(1),
+                                moveToFirstSpecimenPickup
+                                //arm.claw.setClawState(RRClaw.ClawPos.RESET)
                                 //new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
                                 //moveToFirstSamplePickup,
                                 //arm.setupForSampleGrab(0.5f)
