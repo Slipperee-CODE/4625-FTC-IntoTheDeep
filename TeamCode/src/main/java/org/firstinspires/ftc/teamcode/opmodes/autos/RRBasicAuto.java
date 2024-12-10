@@ -83,7 +83,9 @@ public class RRBasicAuto extends WaitingAuto {
                         new SequentialAction(
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
                                 new SleepAction(1),
-                                moveToFirstSpecimenPickup
+                                moveToFirstSpecimenPickup,
+                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
+
                                 //arm.claw.setClawState(RRClaw.ClawPos.RESET)
                                 //new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
                                 //moveToFirstSamplePickup,
@@ -91,6 +93,11 @@ public class RRBasicAuto extends WaitingAuto {
                         )
                 )
         );
+    }
+
+    @Override
+    public void stop(){
+        //arm.deactivatePIDMotors();
     }
 }
 

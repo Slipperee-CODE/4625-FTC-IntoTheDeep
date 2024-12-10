@@ -44,7 +44,7 @@ public abstract class WaitingAuto extends RRCustomOpMode {
     protected void update() {};
 
     @Override
-    public final void stop(){
+    public void stop(){
 
     }
 }

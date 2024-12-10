@@ -144,4 +144,9 @@ public class RRArmExtender extends RRMechanism {
             closePivotPIDMotor.updateAction()
         );
     }
+
+    public void deactivate(){
+        farPivotPIDMotor.deactivate();
+        closePivotPIDMotor.deactivate();
+    }
 }

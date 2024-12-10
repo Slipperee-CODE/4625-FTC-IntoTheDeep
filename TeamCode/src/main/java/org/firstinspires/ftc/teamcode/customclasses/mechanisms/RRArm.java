@@ -141,6 +141,11 @@ public class RRArm extends RRMechanism {
         );
     }
 
+    public void deactivatePIDMotors(){
+        armPivoter.deactivate();
+        armExtender.deactivate();
+    }
+
     public Action setupForSpecimenGrab(){
         return new ParallelAction(
                 claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),

@@ -97,4 +97,9 @@ public class RRArmPivoter extends RRMechanism {
                 rightPivotPIDMotor.updateAction()
         );
     }
+
+    public void deactivate(){
+        leftPivotPIDMotor.deactivate();
+        rightPivotPIDMotor.deactivate();
+    }
 }

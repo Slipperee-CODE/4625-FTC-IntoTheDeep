@@ -20,6 +20,7 @@ public class RRPIDMotor {
     public static final double POWER_THRESHOLD = 0.1; // when calculated power is below this number, it will round to 0 so motor doesn't become super hot
     protected static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
     private static final int TOLERANCE = 1;
+    private boolean isActive = true;
 
     public RRPIDMotor(DcMotor motor, double p, double i, double d)
     {
@@ -55,7 +56,7 @@ public class RRPIDMotor {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 update();
-                return true;
+                return isActive;
             }
         };
     }
@@ -138,5 +139,9 @@ public class RRPIDMotor {
 
     public boolean hasReachedTarget(){
         return Math.abs(getError()) < TOLERANCE;
+    }
+
+    public void deactivate(){
+        isActive = false;
     }
 }
