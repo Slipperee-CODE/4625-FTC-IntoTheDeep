@@ -46,14 +46,12 @@ public class RRBasicAuto extends WaitingAuto {
                 .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(34, -40, -Math.PI/2), 0)
                 .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
-                .lineToX(46.5)
+                .lineToX(50.5)
+                .waitSeconds(3)
                 .setTangent(Math.PI/2)
-                .lineToY(-50)
+                .lineToY(-52)
+                .splineToLinearHeading(new Pose2d(60, 0, -Math.PI/2), 0)
                 /*
-                .lineToX(46.5)
-                .setTangent(Math.PI/2)
-                .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(56, -6, -Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
                 .splineToLinearHeading(new Pose2d(61, -6, -Math.PI/2), 0)
@@ -81,7 +79,7 @@ public class RRBasicAuto extends WaitingAuto {
                 new ParallelAction(
                         arm.queueUpdateActions(),
                         new SequentialAction(
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
                                 new SleepAction(1),
                                 moveToFirstSpecimenPickup,
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
@@ -97,7 +95,7 @@ public class RRBasicAuto extends WaitingAuto {
 
     @Override
     public void stop(){
-        //arm.deactivatePIDMotors();
+        arm.deactivatePIDMotors();
     }
 }
 
