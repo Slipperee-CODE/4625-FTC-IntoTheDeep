@@ -25,7 +25,7 @@ public class RRArmExtender extends RRMechanism {
     public enum ExtensionPos{
         MIN_EXTENSION(-10),
         MAX_EXTENSION(4000), //4400 max
-        DEFAULT_EXTENSION(0),
+        DEFAULT_EXTENSION(100),
         SUBMERSIBLE_EXTENSION(250),
         LOWER_BUCKET_EXTENSION(650),
         UPPER_BUCKET_EXTENSION(1250),
@@ -38,7 +38,8 @@ public class RRArmExtender extends RRMechanism {
         THIRD_SPECIMEN_EXTENSION(800),
         FIRST_SAMPLE_EXTENSION(400),
         SECOND_SAMPLE_EXTENSION(600),
-        THIRD_SAMPLE_EXTENSION(800);
+        THIRD_SAMPLE_EXTENSION(800),
+        AUTO_SPECIMEN_PLACE_UPPER_BAR(1000);
 
         int pos;
         ExtensionPos(int pos) {this.pos = pos;}

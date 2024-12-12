@@ -22,7 +22,9 @@ public class RRArm extends RRMechanism {
         LOWER_BAR(RRArmPivoter.PivotPos.LOWER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.LOWER_SPECIMEN_BAR_EXTENSION),
         UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.UPPER_SPECIMEN_BAR_EXTENSION),
         LOWER_HANG(RRArmPivoter.PivotPos.LOWER_HANG_PIVOT, RRArmExtender.ExtensionPos.LOWER_HANG_EXTENSION),
-        WALL_GRAB(RRArmPivoter.PivotPos.WALL_GRAB_PIVOT, RRArmExtender.ExtensionPos.WALL_GRAB_EXTENSION);
+        WALL_GRAB(RRArmPivoter.PivotPos.WALL_GRAB_PIVOT, RRArmExtender.ExtensionPos.WALL_GRAB_EXTENSION),
+        AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR);
+
 
         RRArmPivoter.PivotPos pivotPos;
         RRArmExtender.ExtensionPos extensionPos;
@@ -62,8 +64,7 @@ public class RRArm extends RRMechanism {
                         //runningActions.add(
                                 //grabSpecimen()
                         //);
-                    }
-            }
+                    }}
             else if (gamepad.bDown) {
                 //runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
             }

@@ -21,7 +21,8 @@ public class RRClaw extends RRMechanism {
         SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS, -1),
         POST_GRAB(STOWED_WRIST_POS, CLAW_GRABBING_POS),
         PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS),
-        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS);
+        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS),
+        PRE_MATCH(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 1f);
 
         float wristServoPos, clawServoPos, rotationServoPos;
         ClawPos(float wristServoPos, float clawServoPos, float rotationServoPos) {
@@ -41,13 +42,13 @@ public class RRClaw extends RRMechanism {
     private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.5f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
-    private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2
+    private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
 
     private static final float CLAW_NOT_GRABBING_POS = 0.15f;
     private static final float CLAW_GRABBING_POS = 0.45f;
 
     private static final float ROTATIONAL_LIMIT = 1f;
-    private static final float DEFAULT_ROTATION = 0.5f;
+    public static final float DEFAULT_ROTATION = 0.5f;
 
     private final Servo wristServo;
     private final Servo clawServo;
@@ -65,7 +66,7 @@ public class RRClaw extends RRMechanism {
         rotationServo = hardwareMap.get(Servo.class, "rotationServo");
         wristServo.setPosition(STOWED_WRIST_POS);
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
-        rotationServo.setPosition(DEFAULT_ROTATION);
+        rotationServo.setPosition(1f);
     }
 
     public Action emulatedClawRotation(float gamepadLeftStickX) {

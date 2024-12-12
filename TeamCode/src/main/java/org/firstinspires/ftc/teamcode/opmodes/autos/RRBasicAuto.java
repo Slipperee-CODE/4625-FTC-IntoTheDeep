@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
+import static org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw.DEFAULT_ROTATION;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -24,12 +26,8 @@ public class RRBasicAuto extends WaitingAuto {
 
     private Action initialTrajectory;
     private Action moveToFirstSpecimenPickup;
-    private Action moveToSecondSpecimenPickup;
-    private Action moveToThirdSpecimenPickup;
-
-    private Action moveToFirstSpecimenPlace;
-    private Action moveToSecondSpecimenPlace;
-    private Action moveToThirdSpecimenPlace;
+    private Action moveToSpecimenPickup;
+    private Action moveToSpecimenPlace;
 
     private Action park;
 
@@ -41,8 +39,11 @@ public class RRBasicAuto extends WaitingAuto {
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, -Math.PI/2));
 
-        moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .lineToYConstantHeading(-38)
+                .build();
+
+        moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(34, -40, -Math.PI/2), 0)
                 .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
@@ -51,18 +52,21 @@ public class RRBasicAuto extends WaitingAuto {
                 .setTangent(Math.PI/2)
                 .lineToY(-52)
                 .splineToLinearHeading(new Pose2d(60, 0, -Math.PI/2), 0)
-                /*
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(61, -6, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(70, -6, -Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
                 .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), 0)
                 .waitSeconds(1)
+                .build();
+
+        moveToSpecimenPlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
-                .waitSeconds(1)
+                .build();
+
+        moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
-                */
                 .build();
     }
 
@@ -70,7 +74,7 @@ public class RRBasicAuto extends WaitingAuto {
     public void init_loop() {
         super.init_loop();
         gamepad2.update();
-        //arm.claw.initUpdateForGrab();
+        arm.claw.initUpdateForGrab();
     }
 
     @Override
@@ -79,15 +83,17 @@ public class RRBasicAuto extends WaitingAuto {
                 new ParallelAction(
                         arm.queueUpdateActions(),
                         new SequentialAction(
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
-                                new SleepAction(1),
-                                moveToFirstSpecimenPickup,
-                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
+                                arm.claw.emulatedClawRotation(DEFAULT_ROTATION),
+                                specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
+                                specimenPickupSequenceAction(),
+                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                //specimenPickupSequenceAction(),
+                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                //specimenPickupSequenceAction(),
+                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                //specimenPickupSequenceAction(),
 
-                                //arm.claw.setClawState(RRClaw.ClawPos.RESET)
-                                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
-                                //moveToFirstSamplePickup,
-                                //arm.setupForSampleGrab(0.5f)
+                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
                 )
         );
@@ -96,6 +102,42 @@ public class RRBasicAuto extends WaitingAuto {
     @Override
     public void stop(){
         arm.deactivatePIDMotors();
+    }
+
+    private Action specimenPlaceSequenceAction(Action enterTrajectory, Action exitTrajectory) {
+        return new SequentialAction(
+                new ParallelAction(
+                        enterTrajectory,
+                        new SequentialAction(
+                                new SleepAction(1),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                        )
+                ),
+
+                new SleepAction(1),
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BAR)),
+                new SleepAction(1),
+                arm.claw.setClawState(RRClaw.ClawPos.RESET),
+                new SleepAction(1),
+
+                new ParallelAction(
+                        exitTrajectory,
+                        new SequentialAction(
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                                new SleepAction(1),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT))
+                        )
+
+                )
+        );
+    }
+
+        private Action specimenPickupSequenceAction(){
+            return new SequentialAction(
+                arm.setupForSpecimenGrab(),
+                new SleepAction(1),
+                arm.grabSpecimen()
+            );
     }
 }
 

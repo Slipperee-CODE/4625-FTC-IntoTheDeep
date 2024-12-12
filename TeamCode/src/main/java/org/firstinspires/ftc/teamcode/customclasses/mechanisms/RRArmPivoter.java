@@ -25,7 +25,7 @@ public class RRArmPivoter extends RRMechanism {
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
         UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
-        WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.2));
+        WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.33));
 
         int pos;
         PivotPos(int pos) {this.pos = pos;}
