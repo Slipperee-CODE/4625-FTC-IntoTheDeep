@@ -29,7 +29,7 @@ public class RRArmExtender extends RRMechanism {
         SUBMERSIBLE_EXTENSION(250),
         LOWER_BUCKET_EXTENSION(650),
         UPPER_BUCKET_EXTENSION(1250),
-        LOWER_SPECIMEN_BAR_EXTENSION(500),
+        LOWER_SPECIMEN_BAR_EXTENSION(100),
         UPPER_SPECIMEN_BAR_EXTENSION(500),
         LOWER_HANG_EXTENSION(400),
         WALL_GRAB_EXTENSION(250),
@@ -39,7 +39,7 @@ public class RRArmExtender extends RRMechanism {
         FIRST_SAMPLE_EXTENSION(400),
         SECOND_SAMPLE_EXTENSION(600),
         THIRD_SAMPLE_EXTENSION(800),
-        AUTO_SPECIMEN_PLACE_UPPER_BAR(1000);
+        AUTO_SPECIMEN_PLACE_UPPER_BAR(800);
 
         int pos;
         ExtensionPos(int pos) {this.pos = pos;}

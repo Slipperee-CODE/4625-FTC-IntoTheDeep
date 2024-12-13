@@ -24,7 +24,7 @@ public class RRArm extends RRMechanism {
         UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.UPPER_SPECIMEN_BAR_EXTENSION),
         LOWER_HANG(RRArmPivoter.PivotPos.LOWER_HANG_PIVOT, RRArmExtender.ExtensionPos.LOWER_HANG_EXTENSION),
         WALL_GRAB(RRArmPivoter.PivotPos.WALL_GRAB_PIVOT, RRArmExtender.ExtensionPos.WALL_GRAB_EXTENSION),
-        AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR);
+        AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR);
 
 
         RRArmPivoter.PivotPos pivotPos;
@@ -169,7 +169,7 @@ public class RRArm extends RRMechanism {
                 claw.setClawState(RRClaw.ClawPos.SPECIMEN_GRAB),
                 new SleepAction(0.25),
                 claw.setClawState(RRClaw.ClawPos.POST_GRAB),
-                new InstantAction(() -> armExtender.OffsetExtension(50))
+                new InstantAction(() -> armExtender.OffsetExtension(150))
         );
     }
 

@@ -12,29 +12,28 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 16)
+                .setConstraints(30, 30, Math.toRadians(180), Math.toRadians(180), 16)
                 .build();
 
         /* RED SIDE SPECIMEN 1+3 */
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -64, -Math.PI/2))
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -64, Math.PI/2))
                 .lineToYConstantHeading(-34)
                 .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(30, -40, -Math.PI/2), 0)
-                        .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
+                        .strafeTo(new Vector2d(30,-40))
+                        .splineToLinearHeading(new Pose2d(42, -12, Math.PI/2), 0)
                 .lineToX(46.5)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(56, -6, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(56, -6, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(61, -6, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(61, -6, Math.PI), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), 0)
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
+                //.splineToLinearHeading(new Pose2d(9, -34, Math.PI/2), Math.PI)
+                //.waitSeconds(1)
+                //.strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
                                 .build());
                 /*
                 .turn(Math.toRadians(-90))

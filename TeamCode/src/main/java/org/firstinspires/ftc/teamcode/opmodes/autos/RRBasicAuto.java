@@ -37,36 +37,37 @@ public class RRBasicAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, -Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, Math.PI/2));
 
         initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .lineToYConstantHeading(-38)
+                .lineToYConstantHeading(-37)
                 .build();
 
         moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(34, -40, -Math.PI/2), 0)
-                .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
-                .lineToX(50.5)
-                .waitSeconds(3)
-                .setTangent(Math.PI/2)
-                .lineToY(-52)
-                .splineToLinearHeading(new Pose2d(60, 0, -Math.PI/2), 0)
+                .strafeTo(new Vector2d(30,-40))
+                .splineToLinearHeading(new Pose2d(42, -12, Math.PI/2), 0)
+                .lineToX(42.5)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(70, -6, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(52, -6, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), 0)
-                .waitSeconds(1)
+                .splineToLinearHeading(new Pose2d(57, -6, Math.PI), 0)
+                .setTangent(Math.PI/2)
+                .lineToY(-50)
+                .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
+                //.waitSeconds(1)
+                //.splineToLinearHeading(new Pose2d(9, -34, Math.PI/2), Math.PI)
+                //.waitSeconds(1)
+                //.strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
                 .build();
 
         moveToSpecimenPlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
+                .splineToLinearHeading(new Pose2d(9, -34, Math.PI/2), Math.PI)
                 .build();
 
         moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
+                .splineToLinearHeading(new Pose2d(37, -46, Math.PI/2), -Math.PI/2)
                 .build();
     }
 
@@ -85,7 +86,7 @@ public class RRBasicAuto extends WaitingAuto {
                         new SequentialAction(
                                 arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
-                                specimenPickupSequenceAction(),
+                                //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
@@ -110,7 +111,8 @@ public class RRBasicAuto extends WaitingAuto {
                         enterTrajectory,
                         new SequentialAction(
                                 new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
+                                arm.preSpecimenDeposit()
                         )
                 ),
 
@@ -123,7 +125,7 @@ public class RRBasicAuto extends WaitingAuto {
                 new ParallelAction(
                         exitTrajectory,
                         new SequentialAction(
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
                                 new SleepAction(1),
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT))
                         )
