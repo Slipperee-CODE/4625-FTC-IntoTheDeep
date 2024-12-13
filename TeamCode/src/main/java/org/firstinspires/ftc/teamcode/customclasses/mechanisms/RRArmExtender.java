@@ -133,6 +133,11 @@ public class RRArmExtender extends RRMechanism {
         closePivotPIDMotor.setTarget(extensionPos.pos);
     }
 
+    public void OffsetExtension(int offset){
+        farPivotPIDMotor.setTarget(farPivotPIDMotor.getTarget()-offset);
+        closePivotPIDMotor.setTarget(closePivotPIDMotor.getTarget()-offset);
+    }
+
     @Override
     public void queueActions() {
 
