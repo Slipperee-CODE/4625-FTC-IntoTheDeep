@@ -30,7 +30,7 @@ public class RRArmExtender extends RRMechanism {
         LOWER_BUCKET_EXTENSION(650),
         UPPER_BUCKET_EXTENSION(1250),
         LOWER_SPECIMEN_BAR_EXTENSION(500),
-        UPPER_SPECIMEN_BAR_EXTENSION(750),
+        UPPER_SPECIMEN_BAR_EXTENSION(500),
         LOWER_HANG_EXTENSION(400),
         WALL_GRAB_EXTENSION(250),
         FIRST_SPECIMEN_EXTENSION(400),
@@ -62,10 +62,9 @@ public class RRArmExtender extends RRMechanism {
 
     private final int TOLERANCE = 10; // in ticks
 
-    public RRArmExtender(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad){
+    public RRArmExtender(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
         this.gamepad = gamepad;
-        this.runningActions = runningActions;
     }
 
     public RRArmExtender(HardwareMap hardwareMap){

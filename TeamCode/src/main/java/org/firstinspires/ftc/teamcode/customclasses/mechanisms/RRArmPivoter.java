@@ -23,9 +23,9 @@ public class RRArmPivoter extends RRMechanism {
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
-        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66)),
+        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.7)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
-        WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.33));
+        WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.175));
 
         int pos;
         PivotPos(int pos) {this.pos = pos;}
@@ -45,10 +45,9 @@ public class RRArmPivoter extends RRMechanism {
     private static final double TICKS_FOR_90_DEGREES = TICKS_PER_REV * 0.25 * PULLEY_RATIO;
     private final int TOLERANCE = 10; // in ticks
 
-    public RRArmPivoter(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad){
+    public RRArmPivoter(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
         this.gamepad = gamepad;
-        this.runningActions = runningActions;
     }
 
     public RRArmPivoter(HardwareMap hardwareMap){

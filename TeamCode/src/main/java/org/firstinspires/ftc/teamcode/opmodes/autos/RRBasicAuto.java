@@ -35,7 +35,7 @@ public class RRBasicAuto extends WaitingAuto {
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
-        arm = new RRArm(hardwareMap, runningActions, gamepad2);
+        arm = new RRArm(hardwareMap, gamepad2);
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, -Math.PI/2));
 
@@ -83,7 +83,7 @@ public class RRBasicAuto extends WaitingAuto {
                 new ParallelAction(
                         arm.queueUpdateActions(),
                         new SequentialAction(
-                                arm.claw.emulatedClawRotation(DEFAULT_ROTATION),
+                                arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
                                 specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),

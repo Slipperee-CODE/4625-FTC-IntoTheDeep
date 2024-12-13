@@ -21,8 +21,9 @@ public class RRClaw extends RRMechanism {
         SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS, -1),
         POST_GRAB(STOWED_WRIST_POS, CLAW_GRABBING_POS),
         PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS),
-        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS),
-        PRE_MATCH(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 1f);
+        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 0.5f),
+        PRE_MATCH(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 1f),
+        PRE_SPECIMEN_DEPOSIT(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS);
 
         float wristServoPos, clawServoPos, rotationServoPos;
         ClawPos(float wristServoPos, float clawServoPos, float rotationServoPos) {
@@ -45,7 +46,7 @@ public class RRClaw extends RRMechanism {
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
 
     private static final float CLAW_NOT_GRABBING_POS = 0.15f;
-    private static final float CLAW_GRABBING_POS = 0.45f;
+    private static final float CLAW_GRABBING_POS = 0.5f;
 
     private static final float ROTATIONAL_LIMIT = 1f;
     public static final float DEFAULT_ROTATION = 0.5f;
@@ -54,10 +55,9 @@ public class RRClaw extends RRMechanism {
     private final Servo clawServo;
     public final Servo rotationServo;
 
-    public RRClaw(HardwareMap hardwareMap, List<Action> runningActions, CustomGamepad gamepad){
+    public RRClaw(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
         this.gamepad = gamepad;
-        this.runningActions = runningActions;
     }
 
     public RRClaw(HardwareMap hardwareMap){
