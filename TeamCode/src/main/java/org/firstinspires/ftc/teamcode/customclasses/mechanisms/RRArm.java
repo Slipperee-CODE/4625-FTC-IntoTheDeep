@@ -168,8 +168,9 @@ public class RRArm extends RRMechanism {
         return new SequentialAction(
                 claw.setClawState(RRClaw.ClawPos.SPECIMEN_GRAB),
                 new SleepAction(0.25),
-                claw.setClawState(RRClaw.ClawPos.POST_GRAB),
-                new InstantAction(() -> armExtender.OffsetExtension(150))
+                new InstantAction(() -> setArmState(ArmState.UPPER_BAR)),
+                new SleepAction(0.25),
+                claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_DEPOSIT)
         );
     }
 
