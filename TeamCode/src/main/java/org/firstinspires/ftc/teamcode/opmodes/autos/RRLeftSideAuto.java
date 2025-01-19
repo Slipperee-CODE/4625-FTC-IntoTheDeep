@@ -18,14 +18,19 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
 @Autonomous(name = "RRBasicAuto", group = "Autonomous")
-public class RRRightSideAuto extends WaitingAuto {
+public class RRLeftSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
 
     private Action initialTrajectory;
-    private Action moveToFirstSpecimenPickup;
-    private Action moveToSpecimenPickup;
-    private Action moveToSpecimenPlace;
+    private Action moveToFirstSamplePickup;
+    private Action moveToFirstSamplePlace;
+
+    private Action moveToSecondSamplePickup;
+    private Action moveToSecondSamplePlace;
+
+    private Action moveToThirdSamplePickup;
+    private Action moveToThirdSamplePlace;
 
     private Action park;
 
@@ -39,29 +44,6 @@ public class RRRightSideAuto extends WaitingAuto {
 
         initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .lineToYConstantHeading(-37)
-                .build();
-
-        moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .strafeTo(new Vector2d(30,-40))
-                .splineToLinearHeading(new Pose2d(42, -12, Math.PI/2), 0)
-                .lineToX(42.5)
-                .setTangent(Math.PI/2)
-                .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(52, -6, Math.PI/2), 0)
-                .setTangent(Math.PI/2)
-                .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(57, -6, Math.PI), 0)
-                .setTangent(Math.PI/2)
-                .lineToY(-50)
-                .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
-                .build();
-
-        moveToSpecimenPlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(9, -34, Math.PI/2), Math.PI)
-                .build();
-
-        moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(37, -46, Math.PI/2), -Math.PI/2)
                 .build();
     }
 
