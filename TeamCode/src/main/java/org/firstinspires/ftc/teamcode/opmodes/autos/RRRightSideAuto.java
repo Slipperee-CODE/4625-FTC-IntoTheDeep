@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
-import static org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw.DEFAULT_ROTATION;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -20,7 +18,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
 @Autonomous(name = "RRBasicAuto", group = "Autonomous")
-public class RRBasicAuto extends WaitingAuto {
+public class RRRightSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
 
