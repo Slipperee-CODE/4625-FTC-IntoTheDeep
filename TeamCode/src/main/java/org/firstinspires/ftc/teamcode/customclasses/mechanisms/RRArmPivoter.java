@@ -76,6 +76,11 @@ public class RRArmPivoter extends RRMechanism {
     }
 
     public void SetPivot(PivotPos pivotPos){
+        if (pivotPos==PivotPos.DEFAULT_PIVOT){
+            leftPivotPIDMotor.ResetPID();
+            rightPivotPIDMotor.ResetPID();
+            return;
+        }
         leftPivotPIDMotor.setTarget(pivotPos.pos);
         rightPivotPIDMotor.setTarget(pivotPos.pos);
     }
