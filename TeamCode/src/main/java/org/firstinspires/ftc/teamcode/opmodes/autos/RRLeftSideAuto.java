@@ -27,8 +27,6 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSamplePlace;
     private Action moveToSecondSamplePickup;
     private Action moveToThirdSamplePickup;
-
-
     private Action park;
 
     @Override

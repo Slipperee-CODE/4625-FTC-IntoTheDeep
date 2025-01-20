@@ -64,6 +64,11 @@ public class RRRightSideAuto extends WaitingAuto {
         moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(37, -46, Math.PI/2), -Math.PI/2)
                 .build();
+
+        park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+                .splineToLinearHeading(new Pose2d(37, -50, Math.PI/2), -Math.PI/2)
+                .build();
+
     }
 
     @Override
@@ -86,8 +91,7 @@ public class RRRightSideAuto extends WaitingAuto {
                                 //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
-                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
-                                //specimenPickupSequenceAction(),
+                                //specimenPlaceSequenceAction(moveToSpecimenPlace, park),
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
