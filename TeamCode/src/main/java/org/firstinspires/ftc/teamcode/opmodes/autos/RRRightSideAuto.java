@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
-@Autonomous(name = "RRBasicAuto", group = "Autonomous")
+@Autonomous(name = "RRRightSideAuto", group = "Autonomous")
 public class RRRightSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
@@ -26,8 +26,9 @@ public class RRRightSideAuto extends WaitingAuto {
     private Action moveToFirstSpecimenPickup;
     private Action moveToSpecimenPickup;
     private Action moveToSpecimenPlace;
-
     private Action park;
+
+    private static final int SPECIMEN_CYCLES = 3; //Doesn't do anything right now
 
     @Override
     public void init() {

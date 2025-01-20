@@ -16,6 +16,7 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-9, -64, Math.PI/2))
+                .strafeToLinearHeading(new Vector2d(-55, -55), Math.PI/4)
                 .splineToLinearHeading(new Pose2d(-48, -40, Math.PI/2), 0)
                 .waitSeconds(1)
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.PI/4), 0)
