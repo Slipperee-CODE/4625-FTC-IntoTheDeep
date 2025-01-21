@@ -55,7 +55,7 @@ public class RRArm extends RRMechanism {
     public List<Action> queueActions(List<Action> runningActions, Telemetry telemetry) {
         if (!isSelectingEndPos) {
             if (gamepad.yDown) {
-                    if (!gamepad.yToggle) {
+                    if (gamepad.yToggle) {
                         runningActions.add(
                                 setupForSpecimenGrab()
                         );
@@ -69,7 +69,7 @@ public class RRArm extends RRMechanism {
                 runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
             }
             else if (gamepad.aDown) {
-                if (!gamepad.aToggle) {
+                if (gamepad.aToggle) {
                     runningActions.add(
                             setupForSampleGrab(0.5f)
                     );
