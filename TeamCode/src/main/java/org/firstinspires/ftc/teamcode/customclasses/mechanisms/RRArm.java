@@ -21,10 +21,10 @@ public class RRArm extends RRMechanism {
         LOWER_BUCKET(RRArmPivoter.PivotPos.LOWER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.LOWER_BUCKET_EXTENSION),
         UPPER_BUCKET(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.UPPER_BUCKET_EXTENSION),
         LOWER_BAR(RRArmPivoter.PivotPos.LOWER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.LOWER_SPECIMEN_BAR_EXTENSION),
-        UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.UPPER_SPECIMEN_BAR_EXTENSION),
+        UPPER_BAR(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.UPPER_SPECIMEN_BAR_EXTENSION), //Changed pivot to UPPER_BUCKET_PIVOT on purpose
         LOWER_HANG(RRArmPivoter.PivotPos.LOWER_HANG_PIVOT, RRArmExtender.ExtensionPos.LOWER_HANG_EXTENSION),
         WALL_GRAB(RRArmPivoter.PivotPos.WALL_GRAB_PIVOT, RRArmExtender.ExtensionPos.WALL_GRAB_EXTENSION),
-        AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR);
+        AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR);
 
 
         RRArmPivoter.PivotPos pivotPos;
@@ -66,7 +66,11 @@ public class RRArm extends RRMechanism {
                     }
             }
             else if (gamepad.bDown) {
-                runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
+                if (claw.MatchesCurrentClawPos(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT)){
+                    runningActions.add(claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE));
+                } else {
+                    runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
+                }
             }
             else if (gamepad.aDown) {
                 if (gamepad.aToggle) {
@@ -159,8 +163,8 @@ public class RRArm extends RRMechanism {
 
     public Action setupForSpecimenGrab(){
         return new ParallelAction(
-                claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
-                new InstantAction(() -> setArmState(ArmState.WALL_GRAB))
+                claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB)
+                //new InstantAction(() -> setArmState(ArmState.WALL_GRAB))
         );
     }
 

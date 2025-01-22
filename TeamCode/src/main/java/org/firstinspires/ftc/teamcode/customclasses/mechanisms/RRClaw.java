@@ -20,10 +20,14 @@ public class RRClaw extends RRMechanism {
         PRE_SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_NOT_GRABBING_POS),
         SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS, -1),
         POST_GRAB(STOWED_WRIST_POS, CLAW_GRABBING_POS),
-        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS),
-        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 0.5f),
+        RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 0.5f), //Also works as RELEASE_SPECIMEN
+
+        RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS),
+
         PRE_MATCH(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS, 1f),
-        PRE_SPECIMEN_DEPOSIT(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS);
+
+        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS),
+        PRE_SPECIMEN_DEPOSIT(STOWED_WRIST_POS, CLAW_GRABBING_POS); //add third servo value which rotates the claw all the way around so that specimen can be placed
 
         float wristServoPos, clawServoPos, rotationServoPos;
         ClawPos(float wristServoPos, float clawServoPos, float rotationServoPos) {
@@ -40,10 +44,10 @@ public class RRClaw extends RRMechanism {
     }
 
     private static final float STOWED_WRIST_POS = .7f;
-    private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.5f;
+    private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.35f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
-    private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
+    private static final float SPECIMEN_GRAB_WRIST_POS = 0.3f; //was .35f for all other meets || was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
 
     private static final float CLAW_NOT_GRABBING_POS = 0.15f;
     private static final float CLAW_GRABBING_POS = 0.5f;
@@ -54,6 +58,8 @@ public class RRClaw extends RRMechanism {
     private final Servo wristServo;
     private final Servo clawServo;
     public final Servo rotationServo;
+
+    private ClawPos currentClawPos;
 
     public RRClaw(HardwareMap hardwareMap, CustomGamepad gamepad){
         this(hardwareMap);
@@ -77,6 +83,7 @@ public class RRClaw extends RRMechanism {
         return new Action(){
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                currentClawPos = clawPos;
                 wristServo.setPosition(clawPos.wristServoPos);
                 clawServo.setPosition(clawPos.clawServoPos);
                 if (clawPos.rotationServoPos != -1){
@@ -94,6 +101,16 @@ public class RRClaw extends RRMechanism {
         if (gamepad.bDown){
             clawServo.setPosition(CLAW_NOT_GRABBING_POS);
         }
+    }
+
+    public ClawPos getCurrentClawPos() {
+        return currentClawPos;
+    }
+
+    public boolean MatchesCurrentClawPos(ClawPos clawPos){
+        return this.currentClawPos.clawServoPos == clawPos.clawServoPos
+                && this.currentClawPos.wristServoPos == clawPos.wristServoPos
+                && this.currentClawPos.rotationServoPos == clawPos.rotationServoPos;
     }
 
     @Override
