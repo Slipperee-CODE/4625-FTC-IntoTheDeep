@@ -68,7 +68,6 @@ public class RRRightSideAuto extends WaitingAuto {
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(37, -50, -Math.PI/2), -Math.PI/2)
                 .build();
-
     }
 
     @Override
@@ -121,7 +120,8 @@ public class RRRightSideAuto extends WaitingAuto {
                 arm.claw.setClawState(RRClaw.ClawPos.RESET),
                 new SleepAction(1),
 
-                //Reduce Extension Here
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+                new SleepAction(5),
 
                 new ParallelAction(
                         exitTrajectory,

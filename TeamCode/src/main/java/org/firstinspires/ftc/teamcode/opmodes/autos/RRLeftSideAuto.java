@@ -109,11 +109,15 @@ public class RRLeftSideAuto extends WaitingAuto {
                         )
                 ),
 
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                new SleepAction(5),
+
                 new SleepAction(1),
                 arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                 new SleepAction(1),
 
-                //Reduce Extension Here
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+                new SleepAction(5),
 
                 new ParallelAction(
                         exitTrajectory,
