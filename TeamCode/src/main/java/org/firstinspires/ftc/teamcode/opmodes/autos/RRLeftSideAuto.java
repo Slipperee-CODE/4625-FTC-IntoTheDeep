@@ -110,8 +110,10 @@ public class RRLeftSideAuto extends WaitingAuto {
                 ),
 
                 new SleepAction(1),
-                arm.claw.setClawState(RRClaw.ClawPos.RESET),
+                arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                 new SleepAction(1),
+
+                //Lower Extension Here
 
                 new ParallelAction(
                         exitTrajectory,

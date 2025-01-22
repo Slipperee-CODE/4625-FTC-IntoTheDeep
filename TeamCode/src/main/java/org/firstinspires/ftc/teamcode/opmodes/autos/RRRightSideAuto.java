@@ -121,6 +121,8 @@ public class RRRightSideAuto extends WaitingAuto {
                 arm.claw.setClawState(RRClaw.ClawPos.RESET),
                 new SleepAction(1),
 
+                //Lower Extension Here
+
                 new ParallelAction(
                         exitTrajectory,
                         new SequentialAction(
