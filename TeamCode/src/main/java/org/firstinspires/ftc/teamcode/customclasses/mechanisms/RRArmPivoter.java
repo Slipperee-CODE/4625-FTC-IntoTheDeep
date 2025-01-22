@@ -21,7 +21,7 @@ public class RRArmPivoter extends RRMechanism {
         DEFAULT_PIVOT(0),
         SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0.1)),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
-        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
+        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
         UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.7)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
