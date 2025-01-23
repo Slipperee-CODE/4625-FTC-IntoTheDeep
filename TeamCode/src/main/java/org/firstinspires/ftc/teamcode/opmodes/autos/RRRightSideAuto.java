@@ -28,7 +28,7 @@ public class RRRightSideAuto extends WaitingAuto {
     private Action moveToSpecimenPlace;
     private Action park;
 
-    private static final int SPECIMEN_CYCLES = 3; //Doesn't do anything right now
+    private static final int SPECIMEN_CYCLES = 3; //Doesn't do anything right this second
 
     @Override
     public void init() {
