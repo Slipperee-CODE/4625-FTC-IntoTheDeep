@@ -78,7 +78,7 @@ public class RRArm extends RRMechanism {
             else if (gamepad.aDown) {
                 if (gamepad.aToggle) {
                     runningActions.add(
-                            setupForSampleGrab(0.0f)
+                            setupForSampleGrab(1.0f)
                     );
                 } else {
                     runningActions.add(
@@ -125,6 +125,14 @@ public class RRArm extends RRMechanism {
             }
         }
 
+        if (gamepad.gamepad.left_bumper){ //manual pivot override
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()-5);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()-5);
+        }  else if (gamepad.gamepad.right_bumper){
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()+5);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()+5);
+        }
+
         if (gamepad.leftDown || gamepad.rightDown) {
             isSelectingEndPos = true;
             if (gamepad.rightDown) {
@@ -133,9 +141,9 @@ public class RRArm extends RRMechanism {
                 isBarSelected = false;
             }
         }
-        if (!gamepad.aToggle) {
+        if (gamepad.aToggle) {
             runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x));
-            telemetry.addLine("ROTATION NATION");
+            //telemetry.addLine("ROTATION NATION");
         }
         armExtender.update(armPivoter.GetCurrPivotInRadians());
         return runningActions;

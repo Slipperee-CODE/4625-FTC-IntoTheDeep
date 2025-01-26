@@ -19,7 +19,7 @@ import java.util.List;
 public class RRArmPivoter extends RRMechanism {
     public enum PivotPos{
         DEFAULT_PIVOT(0),
-        SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0.1)),
+        SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0)),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
@@ -31,8 +31,8 @@ public class RRArmPivoter extends RRMechanism {
         PivotPos(int pos) {this.pos = pos;}
     }
 
-    private RRPIDMotor leftPivotPIDMotor = null;
-    private RRPIDMotor rightPivotPIDMotor = null;
+    public RRPIDMotor leftPivotPIDMotor = null;
+    public RRPIDMotor rightPivotPIDMotor = null;
 
     public static final double P = 0.0045;
     public static final double I = 0.00001;
