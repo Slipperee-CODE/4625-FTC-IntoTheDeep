@@ -30,7 +30,6 @@ public class RRArm extends RRMechanism {
         AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAFE_EXTENSION_HEIGHT);
 
 
-
         RRArmPivoter.PivotPos pivotPos;
         RRArmExtender.ExtensionPos extensionPos;
 
@@ -79,7 +78,7 @@ public class RRArm extends RRMechanism {
             else if (gamepad.aDown) {
                 if (gamepad.aToggle) {
                     runningActions.add(
-                            setupForSampleGrab(0.5f)
+                            setupForSampleGrab(0.0f)
                     );
                 } else {
                     runningActions.add(
