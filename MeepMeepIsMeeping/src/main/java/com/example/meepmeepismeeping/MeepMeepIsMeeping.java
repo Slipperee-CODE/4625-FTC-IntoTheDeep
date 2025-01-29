@@ -15,16 +15,17 @@ public class MeepMeepIsMeeping {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 16)
                 .build();
 
+        /*
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-9, -64, Math.PI/2))
                         .setTangent(Math.PI/2)
                 .lineToY(-60)
                 .strafeToLinearHeading(new Vector2d(-52, -52), Math.PI/4)
                 .strafeToLinearHeading(new Vector2d(-48, -52), Math.PI/2)
                 .build());
+        */
 
 
-
-        /* RED SIDE SPECIMEN 1+3
+        /* RED SIDE SPECIMEN 1+3 */
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -64, -Math.PI/2))
                 .lineToYConstantHeading(-34)
                 .waitSeconds(1)
@@ -39,12 +40,14 @@ public class MeepMeepIsMeeping {
                 .splineToLinearHeading(new Pose2d(61, -9, -Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(37, -52), -Math.PI/2)
+                .setTangent(Math.PI/2)
+                                .lineToY(-60)
                 //.splineToLinearHeading(new Pose2d(9, -34, Math.PI/2), Math.PI)
                 //.waitSeconds(1)
                 //.strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
                 .build());
-*/
+
 
 
 

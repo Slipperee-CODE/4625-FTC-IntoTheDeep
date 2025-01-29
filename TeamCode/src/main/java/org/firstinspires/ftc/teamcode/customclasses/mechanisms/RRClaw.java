@@ -50,7 +50,7 @@ public class RRClaw extends RRMechanism {
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.3f; //was .35f for all other meets || was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
 
     private static final float CLAW_NOT_GRABBING_POS = 0.15f;
-    private static final float CLAW_GRABBING_POS = 0.45f;
+    private static final float CLAW_GRABBING_POS = 0.45f; //MAKE THIS MOREEEE
 
     private final Servo wristServo;
     private final Servo clawServo;

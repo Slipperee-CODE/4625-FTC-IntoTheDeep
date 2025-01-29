@@ -54,7 +54,9 @@ public class RRRightSideAuto extends WaitingAuto {
                 .splineToLinearHeading(new Pose2d(57, -9, -Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(37, -52), -Math.PI/2)
+                .setTangent(Math.PI/2)
+                .lineToY(-60)
                 .build();
 
         moveToSpecimenPlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -63,6 +65,8 @@ public class RRRightSideAuto extends WaitingAuto {
 
         moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(37, -46, -Math.PI/2), -Math.PI/2)
+                .setTangent(Math.PI/2)
+                .lineToY(-60)
                 .build();
 
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
