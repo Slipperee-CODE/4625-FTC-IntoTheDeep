@@ -24,7 +24,10 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action initialTrajectory;
     private Action moveToFirstSamplePickup;
-    private Action moveToSamplePlace;
+    private Action moveToSamplePlace1;
+    private Action moveToSamplePlace2;
+    private Action moveToSamplePlace3;
+
     private Action moveToSecondSamplePickup;
     private Action moveToThirdSamplePickup;
     private Action park;
@@ -38,26 +41,36 @@ public class RRLeftSideAuto extends WaitingAuto {
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-9, -64, Math.PI/2));
 
         initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .strafeToLinearHeading(new Vector2d(-55, -55), Math.PI/4)
+                .setTangent(Math.PI/2)
+                .lineToY(-60)
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.PI/4)
                 .build();
 
-        moveToFirstSamplePickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(-48, -40, Math.PI/2), 0)
+        moveToFirstSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-52,-52,Math.PI/4))
+                .strafeToLinearHeading(new Vector2d(-48, -52), Math.PI/2)
                 .waitSeconds(1)
                 .build();
 
-        moveToSecondSamplePickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(-58, -40, Math.PI/2), 0)
+        moveToSecondSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-52,-52,Math.PI/4))
+                .strafeToLinearHeading(new Vector2d(-58, -52), Math.PI/2)
                 .waitSeconds(1)
                 .build();
 
-        moveToThirdSamplePickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToThirdSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-52,-52,Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-55, -26), Math.PI)
                 .waitSeconds(1)
                 .build();
 
-        moveToSamplePlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .strafeToLinearHeading(new Vector2d(-55, -55), Math.PI/4)
+        moveToSamplePlace1 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48,-52, Math.PI/2))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.PI/4)
+                .build();
+
+        moveToSamplePlace2 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-52, Math.PI/2))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.PI/4)
+                .build();
+
+        moveToSamplePlace3 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-55,-26, Math.PI))
+                .strafeToLinearHeading(new Vector2d(-52, -52), Math.PI/4)
                 .build();
 
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -80,9 +93,9 @@ public class RRLeftSideAuto extends WaitingAuto {
                         new SequentialAction(
                                 arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 samplePlaceSequenceAction(initialTrajectory, moveToFirstSamplePickup),
-                                //samplePickupSequenceAction(),
-                                //samplePlaceSequenceAction(moveToSamplePlace, moveToSecondSamplePickup),
-                                //samplePickupSequenceAction(),
+                                samplePickupSequenceAction(),
+                                samplePlaceSequenceAction(moveToSamplePlace1, moveToSecondSamplePickup),
+                                samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, moveToThirdSamplePickup),
                                 //samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, park),
@@ -110,20 +123,24 @@ public class RRLeftSideAuto extends WaitingAuto {
                 ),
 
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
-                new SleepAction(5),
+                new SleepAction(3),
 
                 new SleepAction(1),
                 arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                 new SleepAction(1),
+                arm.claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
+                new SleepAction(1),
 
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-                new SleepAction(5),
+                new SleepAction(3),
 
                 new ParallelAction(
                         exitTrajectory,
                         new SequentialAction(
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
                                 new SleepAction(1),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                                new SleepAction(3),
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT))
                         )
 
@@ -133,9 +150,13 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action samplePickupSequenceAction(){
         return new SequentialAction(
-            arm.setupForSampleGrab(0.5f),
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
+                new SleepAction(3),
+            arm.setupForSampleGrab(0),
             new SleepAction(1),
-            arm.grabSample()
+            arm.grabSample(),
+            new SleepAction(2),
+            new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
         );
     }
 }
