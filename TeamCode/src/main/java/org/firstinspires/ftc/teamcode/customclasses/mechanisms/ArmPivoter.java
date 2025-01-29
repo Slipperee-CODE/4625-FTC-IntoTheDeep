@@ -18,8 +18,8 @@ public class ArmPivoter extends Mechanism {
         DEFAULT_PIVOT(0),
         SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0.1)),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
-        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
-        LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.8)),
+        UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(.9)),
+        LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.9)),
         UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.66)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
         WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.2));

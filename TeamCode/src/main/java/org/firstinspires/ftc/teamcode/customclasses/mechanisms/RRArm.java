@@ -17,7 +17,7 @@ public class RRArm extends RRMechanism {
     public enum ArmState {
         DEFAULT(RRArmPivoter.PivotPos.DEFAULT_PIVOT, RRArmExtender.ExtensionPos.DEFAULT_EXTENSION),
         SAFE_DEFAULT(RRArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, RRArmExtender.ExtensionPos.DEFAULT_EXTENSION),
-        AUTO_SAFE_DEFAULT(RRArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, RRArmExtender.ExtensionPos.LOWER_BUCKET_EXTENSION),
+        AUTO_SAFE_DEFAULT(RRArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, RRArmExtender.ExtensionPos.SUBMERSIBLE_EXTENSION),
         SUBMERSIBLE_GRAB(RRArmPivoter.PivotPos.DEFAULT_PIVOT, RRArmExtender.ExtensionPos.SUBMERSIBLE_EXTENSION),
         LOWER_BUCKET(RRArmPivoter.PivotPos.LOWER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.LOWER_BUCKET_EXTENSION),
         UPPER_BUCKET(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.UPPER_BUCKET_EXTENSION),
