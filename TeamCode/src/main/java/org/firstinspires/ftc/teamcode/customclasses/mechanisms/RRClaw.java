@@ -44,7 +44,7 @@ public class RRClaw extends RRMechanism {
 
     private static final float STOWED_WRIST_POS = .66f;
     private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.35f;
-    private static final float POST_GRAB_WRIST_POS = 0.4f;
+    private static final float POST_GRAB_WRIST_POS = 0.2f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.3f; //was .35f for all other meets || was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
@@ -92,11 +92,11 @@ public class RRClaw extends RRMechanism {
     }
 
     public void initUpdateForGrab(){
-        if (gamepad.yDown){
+        if (gamepad.upDown){
             clawServo.setPosition(CLAW_GRABBING_POS);
             //rotationServo.setPosition(0);
         }
-        if (gamepad.bDown){
+        if (gamepad.downDown){
             clawServo.setPosition(CLAW_NOT_GRABBING_POS);
             //rotationServo.setPosition(1);
         }
