@@ -47,33 +47,33 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToFirstSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-47, -48), Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI/2)
                 .waitSeconds(1)
                 .build();
 
-        moveToSamplePlace1 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-47,-48, Math.PI/2))
-                .strafeToLinearHeading(new Vector2d(-46, -46), Math.PI/4)
+        moveToSamplePlace1 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48,-48, Math.PI/2))
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToSecondSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-46,-46,Math.PI/4))
+        moveToSecondSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI/2)
                 .waitSeconds(1)
                 .build();
 
         moveToSamplePlace2 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-48, Math.PI/2))
-                .strafeToLinearHeading(new Vector2d(-46, -46), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToThirdSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-46,-46,Math.PI/4))
+        moveToThirdSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-55, -26), Math.PI)
                 .waitSeconds(1)
                 .build();
 
         moveToSamplePlace3 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-55,-26, Math.PI))
-                .strafeToLinearHeading(new Vector2d(-46, -46), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-46,-46, Math.PI/4))
+        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54, Math.PI/4))
                 .splineToLinearHeading(new Pose2d(-24, -10, Math.PI), 0)
                 .build();
     }
@@ -94,8 +94,9 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 samplePlaceSequenceAction(initialTrajectory, moveToFirstSamplePickup),
                                 samplePickupSequenceAction(),
-                                samplePlaceSequenceAction(moveToSamplePlace1, moveToSecondSamplePickup),
-                                samplePickupSequenceAction(),
+                                samplePlaceSequenceAction(moveToSamplePlace1, park),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                                //samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, moveToThirdSamplePickup),
                                 //samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, park),

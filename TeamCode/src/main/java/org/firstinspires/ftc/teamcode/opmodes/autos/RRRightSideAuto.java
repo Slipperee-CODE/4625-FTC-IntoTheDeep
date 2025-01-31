@@ -70,7 +70,7 @@ public class RRRightSideAuto extends WaitingAuto {
                 .build();
 
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(37, -50, Math.PI/2), -Math.PI/2)
+                .splineToLinearHeading(new Pose2d(37, -50, -Math.PI/2), -Math.PI/2)
                 .build();
     }
 
@@ -90,6 +90,7 @@ public class RRRightSideAuto extends WaitingAuto {
                                 arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
                                 specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                park,
                                 //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
