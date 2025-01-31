@@ -36,7 +36,7 @@ public class RRRightSideAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, -Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, Math.PI/2));
 
         initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .lineToYConstantHeading(-37)
@@ -44,14 +44,14 @@ public class RRRightSideAuto extends WaitingAuto {
 
         moveToFirstSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeTo(new Vector2d(30,-40))
-                .splineToLinearHeading(new Pose2d(42, -12, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(42, -12, Math.PI/2), 0)
                 .lineToX(42.5)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(52, -9, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(52, -9, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(57, -9, -Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(57, -9, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
                 .strafeToLinearHeading(new Vector2d(37, -52), -Math.PI/2)
@@ -60,7 +60,7 @@ public class RRRightSideAuto extends WaitingAuto {
                 .build();
 
         moveToSpecimenPlace = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(9, -34, -Math.PI/2), Math.PI)
+                .strafeToLinearHeading(new Vector2d(9, -34), Math.PI/2)
                 .build();
 
         moveToSpecimenPickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -70,7 +70,7 @@ public class RRRightSideAuto extends WaitingAuto {
                 .build();
 
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .splineToLinearHeading(new Pose2d(37, -50, -Math.PI/2), -Math.PI/2)
+                .splineToLinearHeading(new Pose2d(37, -50, Math.PI/2), -Math.PI/2)
                 .build();
     }
 
@@ -89,8 +89,7 @@ public class RRRightSideAuto extends WaitingAuto {
                         new SequentialAction(
                                 arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
-                                //specimenPickupSequenceAction(),
-                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
@@ -125,17 +124,19 @@ public class RRRightSideAuto extends WaitingAuto {
                 new SleepAction(1),
 
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-                new SleepAction(5),
+                new SleepAction(3),
 
                 new ParallelAction(
                         exitTrajectory,
                         new SequentialAction(
                                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
                                 new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT))
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
+                                arm.setupForSpecimenGrab()
                         )
-
-                )
+                ),
+                new SleepAction(1),
+                arm.grabSpecimen()
         );
     }
 

@@ -23,7 +23,7 @@ public class RRArmPivoter extends RRMechanism {
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
-        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.7)),
+        UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.6)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
         WALL_GRAB_PIVOT(convertPercentAngleToTicks(0.185));
 
