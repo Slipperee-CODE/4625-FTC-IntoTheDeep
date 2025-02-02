@@ -55,7 +55,7 @@ public class RRArmExtender extends RRMechanism {
     private boolean limitSwitchWasActiveLastFrame = false;
 
     private int effectiveCurrentMaxExtension;
-    private final int HORIZONTAL_EXPANSION_LIMIT = 3500; //in ticks
+    private final int HORIZONTAL_EXPANSION_LIMIT = 2500; //in ticks
 
     private final int TOLERANCE = 10; // in ticks
 
@@ -96,23 +96,32 @@ public class RRArmExtender extends RRMechanism {
             float right_stick_y = -gamepad.right_stick_y;
             effectiveCurrentMaxExtension = Math.max((int) Math.min((double) MAX_EXTENSION.pos, HORIZONTAL_EXPANSION_LIMIT/Math.cos(Math.min(approxCurrPivotInRadians, Math.PI/2-0.001))), 0);
             if (right_stick_y != 0) {
+                int clippedLeft, clippedRight;
                 int targetLeft = farPivotPIDMotor.getTarget() + (int) (right_stick_y * SPEED);
                 int targetRight = closePivotPIDMotor.getTarget() + (int) (right_stick_y * SPEED);
 
-                int clippedLeft, clippedRight;
                 if (gamepad.gamepad.right_trigger > 0) {
                     clippedRight = Math.min(targetRight, MAX_EXTENSION.pos);
                     clippedLeft = Math.min(targetLeft, MAX_EXTENSION.pos);
                 } else {
-                    clippedRight = Range.clip(targetRight, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
-                    clippedLeft = Range.clip(targetLeft, MIN_EXTENSION.pos, MAX_EXTENSION.pos);
+                    clippedRight = Range.clip(targetRight, MIN_EXTENSION.pos, effectiveCurrentMaxExtension);
+                    clippedLeft = Range.clip(targetLeft, MIN_EXTENSION.pos, effectiveCurrentMaxExtension);
                     //NOT YET USING EFFECTIVE CURRENT MAX EXTENSION
                 }
-
 
                 farPivotPIDMotor.setTarget(clippedLeft);
                 closePivotPIDMotor.setTarget(clippedRight);
             }
+
+            if (gamepad.gamepad.left_bumper){
+                int newClippedLeft, newClippedRight;
+                newClippedRight = Range.clip(farPivotPIDMotor.getTarget(), MIN_EXTENSION.pos, effectiveCurrentMaxExtension);
+                newClippedLeft = Range.clip(farPivotPIDMotor.getTarget(), MIN_EXTENSION.pos, effectiveCurrentMaxExtension);
+
+                farPivotPIDMotor.setTarget(newClippedLeft);
+                closePivotPIDMotor.setTarget(newClippedRight);
+            }
+
         }
 
         if (!magneticLimitSwitch.getState() && !limitSwitchWasActiveLastFrame){ //For some reason the actual output of the magnetic limit switch is reversed so I am reversing it here

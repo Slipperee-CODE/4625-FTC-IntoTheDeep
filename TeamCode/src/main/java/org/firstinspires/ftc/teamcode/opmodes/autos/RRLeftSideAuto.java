@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
-@Autonomous(name = "RRLeftSideAuto", group = "Autonomous")
+@Autonomous(name = "RRLeftSideAuto_2", group = "Autonomous")
 public class RRLeftSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
@@ -74,8 +74,9 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54, Math.PI/4))
-                .splineToLinearHeading(new Pose2d(-24, -10, Math.PI), 0)
+                .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();
+
     }
 
     @Override
@@ -95,36 +96,38 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 samplePlaceSequenceAction(initialTrajectory, moveToFirstSamplePickup),
                                 samplePickupSequenceAction(),
                                 samplePlaceSequenceAction(moveToSamplePlace1, park),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                                new SleepAction(1),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.PARK)),
                                 //samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, moveToThirdSamplePickup),
                                 //samplePickupSequenceAction(),
                                 //samplePlaceSequenceAction(moveToSamplePlace, park),
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
-                        )
-                )
-        );
+                        ))
+                );
     }
 
     @Override
     public void stop(){
         arm.deactivatePIDMotors();
+
     }
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action exitTrajectory) {
         return new SequentialAction(
                 enterTrajectory,
+                arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
                 new SleepAction(.5),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
                 new SleepAction(2),
                 arm.preSampleDeposit(),
-                new SleepAction(.25),
+                new SleepAction(1),
                 arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                 new SleepAction(.25),
                 arm.claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
-                new SleepAction(.25),
+                new SleepAction(1),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
                 new SleepAction(1),
 
@@ -146,13 +149,18 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action samplePickupSequenceAction(){
         return new SequentialAction(
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
-                new SleepAction(3),
+                new SleepAction(2),
             arm.setupForSampleGrab(0),
             new SleepAction(1),
             arm.grabSample(),
-            new SleepAction(2),
+            new SleepAction(1),
             new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
         );
     }
+    /**
+     * Run [a] to completion in a blocking loop.
+     */
+
+
 }
 

@@ -48,10 +48,10 @@ public class RRRightSideAuto extends WaitingAuto {
                 .lineToX(42.5)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(52, -9, Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(54, -9, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(57, -9, Math.PI/2), 0)
+                .splineToLinearHeading(new Pose2d(62, -9, Math.PI/2), 0)
                 .setTangent(Math.PI/2)
                 .lineToY(-50)
                 .strafeToLinearHeading(new Vector2d(37, -52), -Math.PI/2)
@@ -72,6 +72,8 @@ public class RRRightSideAuto extends WaitingAuto {
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(37, -50, -Math.PI/2), -Math.PI/2)
                 .build();
+
+        runningActions.add(arm.queueUpdateActions());
     }
 
     @Override
@@ -84,13 +86,11 @@ public class RRRightSideAuto extends WaitingAuto {
     @Override
     protected void startAfterWait() {
         Actions.runBlocking(
-                new ParallelAction(
-                        arm.queueUpdateActions(),
                         new SequentialAction(
-                                arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
+                                //arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                                 specimenPlaceSequenceAction(initialTrajectory, moveToFirstSpecimenPickup),
-                                specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
-                                park,
+                                //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
+                                //park,
                                 //specimenPickupSequenceAction(),
                                 //specimenPlaceSequenceAction(moveToSpecimenPlace, moveToSpecimenPickup),
                                 //specimenPickupSequenceAction(),
@@ -98,7 +98,6 @@ public class RRRightSideAuto extends WaitingAuto {
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
-                )
         );
     }
 
@@ -112,32 +111,32 @@ public class RRRightSideAuto extends WaitingAuto {
                 new ParallelAction(
                         enterTrajectory,
                         new SequentialAction(
-                                new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
-                                arm.preSpecimenDeposit()
+                                //new SleepAction(1),
+                                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BAR)),
+                                //arm.preSpecimenDeposit()
                         )
                 ),
+                new SleepAction(0.5f),
+                //new SleepAction(1),
+                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BAR)),
+                //new SleepAction(1),
+                //arm.claw.setClawState(RRClaw.ClawPos.RESET),
+                //new SleepAction(1),
 
-                new SleepAction(1),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BAR)),
-                new SleepAction(1),
-                arm.claw.setClawState(RRClaw.ClawPos.RESET),
-                new SleepAction(1),
-
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-                new SleepAction(3),
+                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+                //new SleepAction(3),
 
                 new ParallelAction(
                         exitTrajectory,
                         new SequentialAction(
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
-                                new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
-                                arm.setupForSpecimenGrab()
+                                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
+                                //new SleepAction(1),
+                                //new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT)),
+                                //arm.setupForSpecimenGrab()
                         )
-                ),
-                new SleepAction(1),
-                arm.grabSpecimen()
+                )
+                //new SleepAction(1),
+                //arm.grabSpecimen()
         );
     }
 
