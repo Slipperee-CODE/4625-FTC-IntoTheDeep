@@ -22,6 +22,7 @@ public class RRArmPivoter extends RRMechanism {
         SAFE_DEFAULT_PIVOT(convertPercentAngleToTicks(0)),
         LOWER_HANG_PIVOT(convertPercentAngleToTicks(0.33)),
         UPPER_BUCKET_PIVOT(convertPercentAngleToTicks(1)),
+        UPPER_BUCKET_PIVOT_BUT_MORE_FORWARD(convertPercentAngleToTicks(.85)),
         LOWER_BUCKET_PIVOT(convertPercentAngleToTicks(.95)),
         UPPER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.6)),
         LOWER_SPECIMEN_BAR_PIVOT(convertPercentAngleToTicks(0.33)),
@@ -34,9 +35,9 @@ public class RRArmPivoter extends RRMechanism {
     public RRPIDMotor leftPivotPIDMotor = null;
     public RRPIDMotor rightPivotPIDMotor = null;
 
-    public static final double P = 0.0045;
+    public static final double P = 0.0045; //lower this to 0.0035
     public static final double I = 0.00001;
-    public static final double D = 0.000015; //0.000025 was pretty good
+    public static final double D = 0.000015;
 
     private static final double TICKS_PER_REV = 384.5;
     private static final int SMALL_PULLEY_TEETH = 18;

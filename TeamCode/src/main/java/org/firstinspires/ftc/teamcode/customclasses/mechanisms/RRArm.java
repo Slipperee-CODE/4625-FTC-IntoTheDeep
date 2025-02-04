@@ -31,7 +31,7 @@ public class RRArm extends RRMechanism {
         AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR),
         AUTO_SPECIMEN_PLACE_UPPER_BUCKET(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAMPLE_PLACE_UPPER_BUCKET),
         AUTO_SAMPLE_GRAB(RRArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAMPLE_GRAB),
-        AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAFE_EXTENSION_HEIGHT);
+        AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT_BUT_MORE_FORWARD, RRArmExtender.ExtensionPos.AUTO_SAFE_EXTENSION_HEIGHT);
 
 
         RRArmPivoter.PivotPos pivotPos;
@@ -130,11 +130,11 @@ public class RRArm extends RRMechanism {
         }
 
         if (gamepad.gamepad.left_bumper){ //manual pivot override
-            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()-5);
-            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()-5);
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()-10);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()-10);
         }  else if (gamepad.gamepad.right_bumper){
-            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()+5);
-            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()+5);
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()+10);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()+10);
         }
 
         if (gamepad.leftDown || gamepad.rightDown) {

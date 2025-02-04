@@ -22,14 +22,20 @@ public class RRLeftSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
 
-    private Action initialTrajectory;
-    private Action moveToFirstSamplePickup;
-    private Action moveToSamplePlace1;
-    private Action moveToSamplePlace2;
-    private Action moveToSamplePlace3;
+    private Action moveToPreSample1Place;
+    private Action moveToSample1Place;
+    private Action moveToSample2Pickup;
 
-    private Action moveToSecondSamplePickup;
-    private Action moveToThirdSamplePickup;
+    private Action moveToPreSample2Place;
+    private Action moveToSample2Place;
+    private Action moveToSample3Pickup;
+
+    private Action moveToPreSample3Place;
+    private Action moveToSample3Place;
+    private Action moveToSample4Pickup;
+
+    private Action moveToPreSample4Place;
+    private Action moveToSample4Place;
     private Action park;
 
     @Override
@@ -38,45 +44,50 @@ public class RRLeftSideAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
 
+
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-9, -64, Math.PI/2));
 
-        initialTrajectory = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+
+        moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .setTangent(Math.PI/2)
                 .lineToY(-55)
+                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .build();
+
+        moveToSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToFirstSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
+        moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI/2)
-                .waitSeconds(1)
                 .build();
 
-        moveToSamplePlace1 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48,-48, Math.PI/2))
+
+        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .build();
+
+        moveToSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToSecondSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
+        moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI/2)
-                .waitSeconds(1)
                 .build();
 
-        moveToSamplePlace2 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-48, Math.PI/2))
+
+        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .build();
+
+        moveToSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToThirdSamplePickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-55, -26), Math.PI)
-                .waitSeconds(1)
-                .build();
 
-        moveToSamplePlace3 = roadrunnerDrivetrain.actionBuilder(new Pose2d(-55,-26, Math.PI))
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
-                .build();
-
-        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54, Math.PI/4))
+        park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();
-
     }
 
     @Override
@@ -92,16 +103,12 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new ParallelAction(
                         arm.queueUpdateActions(),
                         new SequentialAction(
-                                arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
-                                samplePlaceSequenceAction(initialTrajectory, moveToFirstSamplePickup),
-                                samplePickupSequenceAction(),
-                                samplePlaceSequenceAction(moveToSamplePlace1, park),
-                                new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.PARK)),
-                                //samplePickupSequenceAction(),
-                                //samplePlaceSequenceAction(moveToSamplePlace, moveToThirdSamplePickup),
-                                //samplePickupSequenceAction(),
-                                //samplePlaceSequenceAction(moveToSamplePlace, park),
+                                samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
+                                samplePickupSequenceAction(moveToSample2Pickup),
+                                //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
+                                //samplePickupSequenceAction(moveToSample3Pickup),
+                                //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
+                                //park,
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         ))
@@ -114,53 +121,44 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     }
 
-    private Action samplePlaceSequenceAction(Action enterTrajectory, Action exitTrajectory) {
+    private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
-                enterTrajectory,
-                arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
-                new SleepAction(.5),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                new ParallelAction(
+                        enterTrajectory,
+                        new SequentialAction(
+                                new SleepAction(2),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                        )
+                ),
+
+                new ParallelAction(
+                        new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                        arm.preSampleDeposit()
+                ),
+
                 new SleepAction(2),
-                arm.preSampleDeposit(),
-                new SleepAction(1),
+
+                placeTrajectory,
+
+                new SleepAction(2),
+
                 arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                 new SleepAction(.25),
                 arm.claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
-                new SleepAction(1),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-                new SleepAction(1),
 
-                new ParallelAction(
-                        exitTrajectory,
-                        new SequentialAction(
-                                new SleepAction(1),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.LOWER_BAR)),
-                                new SleepAction(.25),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
-                                new SleepAction(.5),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.DEFAULT))
-                        )
-
-                )
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY))
         );
     }
 
-    private Action samplePickupSequenceAction(){
-        return new SequentialAction(
+    private Action samplePickupSequenceAction(Action exitTrajectory){
+        return new ParallelAction(
+                exitTrajectory,
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
                 new SleepAction(2),
-            arm.setupForSampleGrab(0),
-            new SleepAction(1),
-            arm.grabSample(),
-            new SleepAction(1),
-            new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
+                arm.setupForSampleGrab(0),
+                arm.grabSample(),
+                new SleepAction(2),
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
         );
     }
-    /**
-     * Run [a] to completion in a blocking loop.
-     */
-
-
 }
-

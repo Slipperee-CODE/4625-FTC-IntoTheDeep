@@ -25,14 +25,14 @@ public class RRArmExtender extends RRMechanism {
     public enum ExtensionPos{
         MIN_EXTENSION(-10),
         MAX_EXTENSION(4000), //4400 max
-        DEFAULT_EXTENSION(100),
+        DEFAULT_EXTENSION(350), //upped from 100
         SUBMERSIBLE_EXTENSION(250),
         LOWER_BUCKET_EXTENSION(650),
         UPPER_BUCKET_EXTENSION(1250),
         LOWER_SPECIMEN_BAR_EXTENSION(100),
         UPPER_SPECIMEN_BAR_EXTENSION(500),
         LOWER_HANG_EXTENSION(400),
-        WALL_GRAB_EXTENSION(250),
+        WALL_GRAB_EXTENSION(350), //upped from 250
         AUTO_SPECIMEN_PLACE_UPPER_BAR(450),
         AUTO_SAMPLE_PLACE_UPPER_BUCKET(4000),
         AUTO_SAFE_EXTENSION_HEIGHT(750),
@@ -46,7 +46,7 @@ public class RRArmExtender extends RRMechanism {
     private RRPIDMotor closePivotPIDMotor = null;
     private DigitalChannel magneticLimitSwitch;
 
-    public static final double P = 0.01;
+    public static final double P = 0.01; //increase this to 0.015 and see what happens (keep increasing till crazy)
     public static final double I = 0.00001;
     public static final double D = 0.00;
 

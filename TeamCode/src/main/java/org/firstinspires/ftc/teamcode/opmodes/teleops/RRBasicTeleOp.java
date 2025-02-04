@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleops;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.RRCustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
+import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRStateHandler;
 
 @Config
 @TeleOp(name="RRBasicTeleOp", group="TeleOp")
@@ -16,14 +18,20 @@ public class RRBasicTeleOp extends RRCustomOpMode
     CustomGamepad gamepad1;
     CustomGamepad gamepad2;
     private RRArm arm;
+    private RRStateHandler stateHandler;
 
     @Override
     public void init(){
         super.init();
-        robotDrivetrain.setSpeedConstant(.65);
+        robotDrivetrain.setSpeedConstant(.85);
+        //Load roadrunner pose2D from auto instead of doing the line below
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(0, 0, 0)); // temp line
+
+
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
+        stateHandler = new RRStateHandler(roadrunnerDrivetrain, gamepad1);
     }
 
     @Override
@@ -35,7 +43,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
     @Override
     public void start(){
         runningActions.add(arm.queueUpdateActions());
-        runningActions.add(arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB));
+        //runningActions.add(arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB));
     }
 
     @Override
@@ -55,10 +63,11 @@ public class RRBasicTeleOp extends RRCustomOpMode
             if (gamepad1.dpad_down) vert += DPAD_SPEED;
             robotDrivetrain.emulateController(vert,horizontal,0);
         } else {
-            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 0.85);
+            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 1.0f);
         }
 
         runningActions = arm.queueActions(runningActions, telemetry);
+        runningActions = stateHandler.queueActions(runningActions, telemetry);
         runActions();
     }
 }
