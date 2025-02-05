@@ -23,7 +23,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
     @Override
     public void init(){
         super.init();
-        robotDrivetrain.setSpeedConstant(.85);
+        robotDrivetrain.setSpeedConstant(.75);
         //Load roadrunner pose2D from auto instead of doing the line below
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(0, 0, 0)); // temp line
 
@@ -62,12 +62,19 @@ public class RRBasicTeleOp extends RRCustomOpMode
             if (gamepad1.dpad_up) vert -= DPAD_SPEED;
             if (gamepad1.dpad_down) vert += DPAD_SPEED;
             robotDrivetrain.emulateController(vert,horizontal,0);
-        } else {
+
+        } else if (gamepad1.b) {
+            robotDrivetrain.emulateController(0,0,0.25f);
+        }
+        else if (gamepad1.x) {
+            robotDrivetrain.emulateController(0,0,-0.25f);
+        }
+        else {
             robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 1.0f);
         }
 
         runningActions = arm.queueActions(runningActions, telemetry);
-        runningActions = stateHandler.queueActions(runningActions, telemetry);
+        //runningActions = stateHandler.queueActions(runningActions, telemetry);
         runActions();
     }
 }

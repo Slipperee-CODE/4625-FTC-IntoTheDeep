@@ -74,7 +74,13 @@ public class RRArm extends RRMechanism {
             }
             else if (gamepad.bDown) {
                 if (claw.MatchesCurrentClawPos(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT)){
-                    runningActions.add(claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE));
+                    runningActions.add(
+                            new SequentialAction(
+                                    claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+                                    new SleepAction(.25),
+                                    claw.setClawState(RRClaw.ClawPos.POST_RELEASE_SAMPLE)
+                            )
+                    );
                 } else {
                     runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
                 }
