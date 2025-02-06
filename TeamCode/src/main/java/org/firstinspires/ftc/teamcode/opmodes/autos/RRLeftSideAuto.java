@@ -45,7 +45,7 @@ public class RRLeftSideAuto extends WaitingAuto {
         arm = new RRArm(hardwareMap, gamepad2);
 
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-9, -64, Math.PI/2));
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI/2));
 
 
         moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
