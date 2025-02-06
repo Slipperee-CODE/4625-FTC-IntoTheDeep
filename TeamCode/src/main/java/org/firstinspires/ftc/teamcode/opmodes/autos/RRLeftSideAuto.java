@@ -142,9 +142,11 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                 new SleepAction(2),
 
-                arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
-                new SleepAction(.25),
-                arm.claw.setClawState(RRClaw.ClawPos.PRE_SPECIMEN_GRAB),
+                arm.sampleDeposit(),
+
+                new SleepAction(2),
+
+                arm.setupForSampleGrab(1.0f),
 
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY))
         );
@@ -155,7 +157,6 @@ public class RRLeftSideAuto extends WaitingAuto {
                 exitTrajectory,
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
                 new SleepAction(2),
-                arm.setupForSampleGrab(0),
                 arm.grabSample(),
                 new SleepAction(2),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))

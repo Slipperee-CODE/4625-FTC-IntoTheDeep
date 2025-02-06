@@ -75,11 +75,7 @@ public class RRArm extends RRMechanism {
             else if (gamepad.bDown) {
                 if (claw.MatchesCurrentClawPos(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT)){
                     runningActions.add(
-                            new SequentialAction(
-                                    claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
-                                    new SleepAction(.25),
-                                    claw.setClawState(RRClaw.ClawPos.POST_RELEASE_SAMPLE)
-                            )
+                            sampleDeposit()
                     );
                 } else {
                     runningActions.add(claw.setClawState(RRClaw.ClawPos.RESET));
@@ -136,11 +132,11 @@ public class RRArm extends RRMechanism {
         }
 
         if (gamepad.gamepad.left_bumper){ //manual pivot override
-            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()-10);
-            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()-10);
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()-5);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()-5);
         }  else if (gamepad.gamepad.right_bumper){
-            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()+10);
-            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()+10);
+            armPivoter.leftPivotPIDMotor.setTarget(armPivoter.leftPivotPIDMotor.getTarget()+5);
+            armPivoter.rightPivotPIDMotor.setTarget(armPivoter.rightPivotPIDMotor.getTarget()+5);
         }
 
         if (gamepad.leftDown || gamepad.rightDown) {
@@ -153,7 +149,6 @@ public class RRArm extends RRMechanism {
         }
         if (gamepad.aToggle) {
             runningActions.add(claw.emulatedClawRotation(gamepad.left_stick_x));
-            //telemetry.addLine("ROTATION NATION");
         }
         armExtender.update(armPivoter.GetCurrPivotInRadians());
         return runningActions;
@@ -215,6 +210,14 @@ public class RRArm extends RRMechanism {
     public Action preSampleDeposit(){
         return new SequentialAction(
                 claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT)
+        );
+    }
+
+    public Action sampleDeposit(){
+        return new SequentialAction(
+            claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+            new SleepAction(.25),
+            claw.setClawState(RRClaw.ClawPos.POST_RELEASE_SAMPLE)
         );
     }
 
