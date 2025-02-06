@@ -83,8 +83,7 @@ public class RRLeftSideAuto extends WaitingAuto {
         moveToSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
-
-
+        
         park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();

@@ -25,8 +25,8 @@ public class MeepMeepIsMeeping {
         */
 
 
-        /* RED SIDE SPECIMEN 1+3 */
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(9, -64, Math.PI/2))
+        /* RED SIDE SPECIMEN 1+3
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-38, -64, Math.PI/2))
                 .lineToYConstantHeading(-34)
                 .waitSeconds(1)
                 .strafeTo(new Vector2d(30,-40))
@@ -47,6 +47,8 @@ public class MeepMeepIsMeeping {
                 .waitSeconds(1)
                 .strafeToLinearHeading(new Vector2d(37, -46), -Math.PI/2)
                 .build());
+
+         */
 
 
 
@@ -100,8 +102,8 @@ public class MeepMeepIsMeeping {
 
 
 
-        /* RED SIDE SAMPLE 1+3
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-9, -64, Math.PI/2))
+        /* RED SIDE SAMPLE 1+3 */
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-38, -64, Math.PI/2))
                 .lineToYConstantHeading(-46)
                 .splineToLinearHeading(new Pose2d(-55, -55, Math.PI/4), 0)
                 .splineToLinearHeading(new Pose2d(-48, -46, Math.PI/2), 0)
@@ -120,7 +122,7 @@ public class MeepMeepIsMeeping {
                 .waitSeconds(1)
                 .build());
 
-         */
+
 
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
