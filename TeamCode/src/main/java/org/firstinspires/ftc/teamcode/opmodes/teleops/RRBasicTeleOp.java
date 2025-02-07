@@ -70,7 +70,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
             robotDrivetrain.emulateController(0,0,-0.25f);
         }
         else {
-            robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 1.0f);
+            robotDrivetrain.emulateController(Math.pow(gamepad1.left_stick_y, 3), Math.pow(-gamepad1.left_stick_x,3), Math.pow(gamepad1.right_stick_x * 1.0f,3));
         }
 
         runningActions = arm.queueActions(runningActions, telemetry);

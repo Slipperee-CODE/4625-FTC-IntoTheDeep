@@ -97,10 +97,14 @@ public class RRLeftSideAuto extends WaitingAuto {
     }
 
     @Override
+    public void update() {
+        runActions();
+    }
+
+    @Override
     protected void startAfterWait() {
+        runningActions.add(arm.queueUpdateActions());
         Actions.runBlocking(
-                new ParallelAction(
-                        arm.queueUpdateActions(),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
                                 samplePickupSequenceAction(moveToSample2Pickup),
@@ -111,7 +115,6 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
-                )
         );
     }
 
