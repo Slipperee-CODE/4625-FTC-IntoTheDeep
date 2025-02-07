@@ -127,7 +127,14 @@ public class RRArm extends RRMechanism {
             if (gamepad.gamepad.left_trigger > 0) {
                 setArmState(ArmState.DEFAULT);
             } else {
-                setArmState(ArmState.SAFE_DEFAULT);
+                runningActions.add(
+                        new SequentialAction(
+                                new InstantAction(() -> setArmState(ArmState.UPPER_BUCKET)),
+                                new SleepAction(5.0f),
+                                new InstantAction(() -> setArmState(ArmState.SAFE_DEFAULT))
+                        )
+                );
+
             }
         }
 
@@ -217,7 +224,7 @@ public class RRArm extends RRMechanism {
         return new SequentialAction(
             claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
             new SleepAction(.25),
-            claw.setClawState(RRClaw.ClawPos.POST_RELEASE_SAMPLE)
+            claw.setClawState(RRClaw.ClawPos.POST_GRAB) //Used to be POST_RELEASE_SAMPLE
         );
     }
 

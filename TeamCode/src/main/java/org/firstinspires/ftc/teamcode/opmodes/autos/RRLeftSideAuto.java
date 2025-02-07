@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 
 @Config
-@Autonomous(name = "RRLeftSideAuto_2", group = "Autonomous")
+@Autonomous(name = "RRLeftSideAuto", group = "Autonomous")
 public class RRLeftSideAuto extends WaitingAuto {
     private RRArm arm;
     private CustomGamepad gamepad2;
@@ -51,7 +51,7 @@ public class RRLeftSideAuto extends WaitingAuto {
         moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .setTangent(Math.PI/2)
                 .lineToY(-55)
-                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
         moveToSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -64,7 +64,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
 
         moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
         moveToSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -77,7 +77,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
 
         moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .strafeToLinearHeading(new Vector2d(-57, -57), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
         moveToSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
@@ -130,16 +130,16 @@ public class RRLeftSideAuto extends WaitingAuto {
                         )
                 ),
 
-                new ParallelAction(
-                        new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
-                        arm.preSampleDeposit()
-                ),
+                new SleepAction(5),
 
-                new SleepAction(2),
+                arm.preSampleDeposit(),
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+
+                new SleepAction(5),
 
                 placeTrajectory,
 
-                new SleepAction(2),
+                new SleepAction(5),
 
                 arm.sampleDeposit(),
 
@@ -147,7 +147,9 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                 arm.setupForSampleGrab(1.0f),
 
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY))
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+
+                new SleepAction(5)
         );
     }
 
