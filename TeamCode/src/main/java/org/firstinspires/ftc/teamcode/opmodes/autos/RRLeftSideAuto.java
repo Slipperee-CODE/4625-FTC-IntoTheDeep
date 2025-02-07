@@ -110,25 +110,21 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 //park,
 
                                 new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
-                        ))
-                );
+                        )
+                )
+        );
     }
 
     @Override
     public void stop(){
         arm.deactivatePIDMotors();
-
     }
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
-                new ParallelAction(
-                        enterTrajectory,
-                        new SequentialAction(
-                                new SleepAction(2),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
-                        )
-                ),
+                enterTrajectory,
+                new SleepAction(2),
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
 
                 new SleepAction(5),
 
@@ -154,7 +150,7 @@ public class RRLeftSideAuto extends WaitingAuto {
     }
 
     private Action samplePickupSequenceAction(Action exitTrajectory){
-        return new ParallelAction(
+        return new SequentialAction(
                 exitTrajectory,
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
                 new SleepAction(2),

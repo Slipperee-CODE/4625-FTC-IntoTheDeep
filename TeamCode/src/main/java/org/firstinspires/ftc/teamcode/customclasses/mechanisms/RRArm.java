@@ -129,7 +129,7 @@ public class RRArm extends RRMechanism {
             } else {
                 runningActions.add(
                         new SequentialAction(
-                                new InstantAction(() -> setArmState(ArmState.UPPER_BUCKET)),
+                                new InstantAction(() -> setArmState(ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
                                 new SleepAction(5.0f),
                                 new InstantAction(() -> setArmState(ArmState.SAFE_DEFAULT))
                         )
