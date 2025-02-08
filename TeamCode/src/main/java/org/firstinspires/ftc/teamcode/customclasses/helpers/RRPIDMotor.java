@@ -55,6 +55,10 @@ public class RRPIDMotor {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (!isActive) {
+                    motor.setPower(0);
+                    return false;
+                }
                 update();
                 return isActive;
             }

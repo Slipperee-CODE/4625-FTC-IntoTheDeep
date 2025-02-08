@@ -97,19 +97,26 @@ public class RRLeftSideAuto extends WaitingAuto {
     }
 
     @Override
+    protected void update(){
+        runActions();
+    }
+
+    @Override
     protected void startAfterWait() {
-        Actions.runBlocking(
+        runningActions.add(
                 new ParallelAction(
-                        arm.queueUpdateActions(),
+                        arm.armPivoter.leftPivotPIDMotor.updateAction(),
+                        arm.armPivoter.rightPivotPIDMotor.updateAction(),
+                        arm.armExtender.closePivotPIDMotor.updateAction(),
+                        arm.armExtender.farPivotPIDMotor.updateAction(),
+
                         new SequentialAction(
-                                samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
-                                samplePickupSequenceAction(moveToSample2Pickup),
+                                samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place)
+                                //samplePickupSequenceAction(moveToSample2Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
                                 //samplePickupSequenceAction(moveToSample3Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
-
-                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
                 )
         );
@@ -122,10 +129,10 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
-                enterTrajectory,
+                //enterTrajectory,
                 new SleepAction(2),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
-
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                /*
                 new SleepAction(5),
 
                 arm.preSampleDeposit(),
@@ -146,6 +153,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
                 new SleepAction(5)
+                 */
         );
     }
 

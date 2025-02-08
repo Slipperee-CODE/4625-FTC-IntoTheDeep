@@ -42,8 +42,8 @@ public class RRArmExtender extends RRMechanism {
         ExtensionPos(int pos) {this.pos = pos;}
     }
 
-    private RRPIDMotor farPivotPIDMotor = null;
-    private RRPIDMotor closePivotPIDMotor = null;
+    public RRPIDMotor farPivotPIDMotor = null;
+    public RRPIDMotor closePivotPIDMotor = null;
     private DigitalChannel magneticLimitSwitch;
 
     public static final double P = 0.02; //increase this to 0.015 and see what happens (keep increasing till crazy)
