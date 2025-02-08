@@ -72,15 +72,17 @@ public class RRPIDMotor {
 
     private class UpdateAction implements Action {
             private Telemetry telemetry;
+            private Clock clock2;
             private UpdateAction(Telemetry telemetry) {
                 this.telemetry = telemetry;
+                clock2 = new Clock();
             }
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                double startTime = clock.getTimeSeconds();
+                double startTime = clock2.getTimeSeconds();
                 update(telemetry);
-                telemetry.addLine(Double.toString(clock.getTimeSeconds()-startTime));
+                telemetry.addLine(Double.toString(clock2.getTimeSeconds()-startTime));
                 return isActive;
             }
     }
@@ -139,7 +141,8 @@ public class RRPIDMotor {
         pOutput = p * error;
 
         //Must be negative to "slow" down the effects of a large spike
-        dOutput = -d * (error - lastError) / deltaTime;
+        dOutput = 0.0;
+        //dOutput = -d * (error - lastError) / deltaTime;
         if (error - lastError < INTEGRAL_START_THRESHOLD) {
             errorSum += error * deltaTime * i;
         }

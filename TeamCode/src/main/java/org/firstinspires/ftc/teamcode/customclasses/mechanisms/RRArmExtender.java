@@ -46,9 +46,9 @@ public class RRArmExtender extends RRMechanism {
     public RRPIDMotor closePivotPIDMotor = null;
     private DigitalChannel magneticLimitSwitch;
 
-    public static final double P = 0.02; //increase this to 0.015 and see what happens (keep increasing till crazy)
-    public static final double I = 0.00001;
-    public static final double D = 0.0002;
+    public static final double P = 0.02;//0.02; //increase this to 0.015 and see what happens (keep increasing till crazy)
+    public static final double I = 0.0;//0.00001;
+    public static final double D = 0.0; // 0.0002;
 
     private static final float SPEED = 150.0f;
 

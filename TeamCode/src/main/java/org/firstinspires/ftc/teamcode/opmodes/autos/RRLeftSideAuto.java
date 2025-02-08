@@ -118,8 +118,8 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new ParallelAction(
                         arm.armPivoter.leftPivotPIDMotor.updateActionClass,
                         arm.armPivoter.rightPivotPIDMotor.updateActionClass,
-                        arm.armExtender.farPivotPIDMotor.updateActionClass,
-                        arm.armExtender.closePivotPIDMotor.updateActionClass,
+                        //arm.armExtender.farPivotPIDMotor.updateActionClass,
+                        //arm.armExtender.closePivotPIDMotor.updateActionClass,
                         new UpdateTelemetry(telemetry),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
@@ -128,7 +128,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 //samplePickupSequenceAction(moveToSample3Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
-
+                                new SleepAction(10f),
                                 new InstantAction(arm::deactivatePIDMotors) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
                 )
@@ -143,8 +143,8 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
-                enterTrajectory,
-                new SleepAction(2),
+                //enterTrajectory,
+                new SleepAction(5),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
                 /*
                 new SleepAction(5),

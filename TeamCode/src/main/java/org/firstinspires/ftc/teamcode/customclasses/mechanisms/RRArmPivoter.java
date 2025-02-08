@@ -35,9 +35,9 @@ public class RRArmPivoter extends RRMechanism {
     public RRPIDMotor leftPivotPIDMotor = null;
     public RRPIDMotor rightPivotPIDMotor = null;
 
-    public static final double P = 0.003; //lower this to 0.0035
-    public static final double I = 0.00001;
-    public static final double D = 0.000015;
+    public static final double P = 0.00045;//0.003; //lower this to 0.0035
+    public static final double I = 0.0;//0.00001;
+    public static final double D = 0.0; //0.000015;
 
     private static final double TICKS_PER_REV = 384.5;
     private static final int SMALL_PULLEY_TEETH = 18;
