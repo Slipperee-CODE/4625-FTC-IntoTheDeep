@@ -105,8 +105,7 @@ public class RRPIDMotor {
 
     public void update(Telemetry telemetry) { update(telemetry,clock.getDeltaSeconds());}
 
-    public void update(Telemetry telemetry, double deltaTime)
-    {
+    public void update(Telemetry telemetry, double deltaTime) {
         final double pOutput;
         final double iOutput;
         final double dOutput;
@@ -124,7 +123,7 @@ public class RRPIDMotor {
             errorSum += error * deltaTime * i;
         }
 
-        errorSum = clamp(errorSum,-1.0,1.0);
+        errorSum = clamp(errorSum, -1.0, 1.0);
         iOutput = errorSum;
 
         final double output = pOutput + iOutput + dOutput;

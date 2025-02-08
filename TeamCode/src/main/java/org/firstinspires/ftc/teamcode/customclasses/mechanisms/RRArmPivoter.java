@@ -92,7 +92,8 @@ public class RRArmPivoter extends RRMechanism {
 
     @Override
     public void queueActions() {
-
+        leftPivotPIDMotor.update();
+        rightPivotPIDMotor.update();
     }
 
     @Override

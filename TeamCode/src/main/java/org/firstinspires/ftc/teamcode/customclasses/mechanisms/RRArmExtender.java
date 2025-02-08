@@ -145,7 +145,8 @@ public class RRArmExtender extends RRMechanism {
 
     @Override
     public void queueActions() {
-
+        farPivotPIDMotor.update();
+        closePivotPIDMotor.update();
     }
 
     @Override
