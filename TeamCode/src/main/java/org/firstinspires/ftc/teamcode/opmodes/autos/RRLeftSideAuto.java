@@ -127,10 +127,9 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
 
-                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
+                                new InstantAction(arm::deactivatePIDMotors) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
                 )
-
         );
     }
 
