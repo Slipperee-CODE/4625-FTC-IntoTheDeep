@@ -112,7 +112,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place)
-                                //samplePickupSequenceAction(moveToSample2Pickup),
+                                //samplePickupSequenceAction(moveToSample2Pickup)
                                 //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
                                 //samplePickupSequenceAction(moveToSample3Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
@@ -153,6 +153,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
                 new SleepAction(5)
+
                  */
         );
     }
