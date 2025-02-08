@@ -46,8 +46,6 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Clock clock;
     private double startTime = 0.0;
 
-    private boolean shouldPIDMotorsBeRunning = false;
-
     @Override
     public void init() {
         super.init();
@@ -109,37 +107,19 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     protected void update(){
+        arm.queueActions();
         runActions();
         telemetry.update();
     }
 
-    public class ManualArmPIDUpdate implements Action{
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if (!shouldPIDMotorsBeRunning){
-                arm.armExtender.closePivotPIDMotor.setRawPower(0);
-                arm.armExtender.farPivotPIDMotor.setRawPower(0);
-                arm.armPivoter.leftPivotPIDMotor.setRawPower(0);
-                arm.armPivoter.rightPivotPIDMotor.setRawPower(0);
-                return false;
-            }
-            arm.queueActions();
-            return shouldPIDMotorsBeRunning;
-        }
-    }
-
     @Override
     protected void startAfterWait() {
-        shouldPIDMotorsBeRunning = true;
         runningActions.add(
-                new ParallelAction(
-                        //new InstantAction(() -> startTime = clock.getTimeSeconds()),
-                        new ManualArmPIDUpdate(),
                         new SequentialAction(
                                 //moveToPreSample1Place,
                                 new SleepAction(2),
-                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                                new SleepAction(2)
                                 //samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place)
                                 //samplePickupSequenceAction(moveToSample2Pickup)
                                 //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
@@ -148,14 +128,12 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 //park,
                         )
                         //new InstantAction(() -> telemetry.addData("Frame Time", clock.getTimeSeconds()-startTime))
-                )
-        );
+                );
     }
 
     @Override
     public void stop(){
-        shouldPIDMotorsBeRunning = false;
-        arm.deactivatePIDMotors();
+
     }
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
