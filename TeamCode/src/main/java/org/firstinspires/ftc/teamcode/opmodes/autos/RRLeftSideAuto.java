@@ -41,7 +41,7 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSample4Place;
     private Action park;
 
-    private boolean shouldMotorsBeRunning = false;
+    private Action manualUpdateOfPIDMotors;
 
     @Override
     public void init() {
@@ -49,45 +49,46 @@ public class RRLeftSideAuto extends WaitingAuto {
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
 
-        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI/2));
+
+        roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI / 2));
 
         moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
-                .setTangent(Math.PI/2)
+                .setTangent(Math.PI / 2)
                 .lineToY(-55)
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI / 4)
                 .build();
 
-        moveToSample1Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
+        moveToSample1Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI / 4))
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI / 4)
                 .build();
 
-        moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI/2)
-                .build();
-
-
-        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48, -48, Math.PI/2))
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
-                .build();
-
-        moveToSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
-                .build();
-
-        moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI/2)
+        moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI / 4))
+                .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI / 2)
                 .build();
 
 
-        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58, -48, Math.PI/2))
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
+        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48, -48, Math.PI / 2))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI / 4)
                 .build();
 
-        moveToSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
+        moveToSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI / 4))
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI / 4)
                 .build();
-        
-        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
+
+        moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI / 4))
+                .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI / 2)
+                .build();
+
+
+        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58, -48, Math.PI / 2))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI / 4)
+                .build();
+
+        moveToSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI / 4))
+                .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI / 4)
+                .build();
+
+        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI / 4))
                 .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();
     }
@@ -101,27 +102,14 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void update() {
-
-    }
-
-    private Action ManualUpdateOfPIDMotors(){
-        return new Action() {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                if (shouldMotorsBeRunning){
-                    arm.queueActions();
-                }
-                return shouldMotorsBeRunning;
-            }
-        };
+        //telemetry.update();
     }
 
     @Override
     protected void startAfterWait() {
-        shouldMotorsBeRunning = true;
         Actions.runBlocking(
                 new ParallelAction(
-                        ManualUpdateOfPIDMotors(),
+                        arm.queueUpdateActions(),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
                                 //samplePickupSequenceAction(moveToSample2Pickup),
@@ -130,8 +118,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
 
-                                new InstantAction(() -> shouldMotorsBeRunning = false)
-                                //new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
+                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
                 )
 
@@ -140,8 +127,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void stop(){
-        shouldMotorsBeRunning = false;
-        //arm.deactivatePIDMotors();
+        arm.deactivatePIDMotors();
     }
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
