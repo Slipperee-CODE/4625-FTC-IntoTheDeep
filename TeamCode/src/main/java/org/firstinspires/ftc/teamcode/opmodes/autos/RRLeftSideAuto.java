@@ -102,8 +102,8 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void update() {
-        //telemetry.update();
-        runActions();
+        telemetry.update();
+        //runActions();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     protected void startAfterWait() {
-        runningActions.add(
+        Actions.runBlocking(
                 new ParallelAction(
                         arm.armPivoter.leftPivotPIDMotor.updateAction(),
                         arm.armPivoter.rightPivotPIDMotor.updateAction(),

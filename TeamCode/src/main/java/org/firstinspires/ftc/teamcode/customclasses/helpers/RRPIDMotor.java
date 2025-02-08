@@ -55,7 +55,9 @@ public class RRPIDMotor {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                double startTime = clock.getTimeSeconds();
                 update();
+                telemetryPacket.addLine(Double.toString(clock.getTimeSeconds()-startTime));
                 return isActive;
             }
         };
