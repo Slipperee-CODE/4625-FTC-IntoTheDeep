@@ -52,10 +52,10 @@ public class RRArm extends RRMechanism {
     private boolean isSelectingEndPos = false;
     private boolean isBarSelected = false;
 
-    public RRArm(HardwareMap hardwareMap, CustomGamepad gamepad) {
+    public RRArm(HardwareMap hardwareMap, CustomGamepad gamepad, Telemetry telemetry) {
         this.gamepad = gamepad;
-        armPivoter = new RRArmPivoter(hardwareMap, gamepad);
-        armExtender = new RRArmExtender(hardwareMap, gamepad);
+        armPivoter = new RRArmPivoter(hardwareMap, gamepad, telemetry);
+        armExtender = new RRArmExtender(hardwareMap, gamepad, telemetry);
         claw = new RRClaw(hardwareMap, gamepad);
     }
 

@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.WaitingAuto;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
@@ -41,13 +42,13 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSample4Place;
     private Action park;
 
-    private Action manualUpdateOfPIDMotors;
+    private boolean activeTelemetry = true;
 
     @Override
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
-        arm = new RRArm(hardwareMap, gamepad2);
+        arm = new RRArm(hardwareMap, gamepad2, telemetry);
 
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI / 2));
@@ -102,7 +103,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void update() {
-        telemetry.update();
+        //telemetry.update();
         //runActions();
     }
 
@@ -115,10 +116,11 @@ public class RRLeftSideAuto extends WaitingAuto {
     protected void startAfterWait() {
         Actions.runBlocking(
                 new ParallelAction(
-                        arm.armPivoter.leftPivotPIDMotor.updateAction(),
-                        arm.armPivoter.rightPivotPIDMotor.updateAction(),
-                        arm.armExtender.farPivotPIDMotor.updateAction(),
-                        arm.armExtender.closePivotPIDMotor.updateAction(),
+                        arm.armPivoter.leftPivotPIDMotor.updateActionClass,
+                        arm.armPivoter.rightPivotPIDMotor.updateActionClass,
+                        arm.armExtender.farPivotPIDMotor.updateActionClass,
+                        arm.armExtender.closePivotPIDMotor.updateActionClass,
+                        new UpdateTelemetry(telemetry),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
                                 //samplePickupSequenceAction(moveToSample2Pickup),
@@ -135,6 +137,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void stop(){
+        activeTelemetry = false;
         arm.deactivatePIDMotors();
     }
 
@@ -177,5 +180,17 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new SleepAction(2),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
         );
+    }
+
+    public class UpdateTelemetry implements Action{
+        Telemetry telemetry;
+        public UpdateTelemetry(Telemetry telemetry){
+            this.telemetry = telemetry;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            telemetry.update();
+            return activeTelemetry;
+        }
     }
 }

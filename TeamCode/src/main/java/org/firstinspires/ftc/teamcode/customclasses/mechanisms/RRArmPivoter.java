@@ -46,12 +46,12 @@ public class RRArmPivoter extends RRMechanism {
     private static final double TICKS_FOR_90_DEGREES = TICKS_PER_REV * 0.25 * PULLEY_RATIO;
     private final int TOLERANCE = 10; // in ticks
 
-    public RRArmPivoter(HardwareMap hardwareMap, CustomGamepad gamepad){
-        this(hardwareMap);
+    public RRArmPivoter(HardwareMap hardwareMap, CustomGamepad gamepad, Telemetry telemetry){
+        this(hardwareMap, telemetry);
         this.gamepad = gamepad;
     }
 
-    public RRArmPivoter(HardwareMap hardwareMap){
+    public RRArmPivoter(HardwareMap hardwareMap, Telemetry telemetry){
         DcMotor leftPivotMotor = hardwareMap.get(DcMotor.class, "leftPivotMotor");
         DcMotor rightPivotMotor = hardwareMap.get(DcMotor.class, "rightPivotMotor");
 
@@ -66,8 +66,8 @@ public class RRArmPivoter extends RRMechanism {
 
         leftPivotMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftPivotPIDMotor = new RRPIDMotor(leftPivotMotor, P, I, D);
-        rightPivotPIDMotor = new RRPIDMotor(rightPivotMotor, P, I, D);
+        leftPivotPIDMotor = new RRPIDMotor(leftPivotMotor, P, I, D, telemetry);
+        rightPivotPIDMotor = new RRPIDMotor(rightPivotMotor, P, I, D, telemetry);
         leftPivotPIDMotor.ResetPID();
         rightPivotPIDMotor.ResetPID();
     }

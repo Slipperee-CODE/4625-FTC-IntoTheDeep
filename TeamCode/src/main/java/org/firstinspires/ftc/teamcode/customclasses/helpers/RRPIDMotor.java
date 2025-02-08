@@ -21,6 +21,7 @@ public class RRPIDMotor {
     protected static final int INTEGRAL_START_THRESHOLD = 20; // how many encoder ticks the delta error must be below to activate the error sum
     private static final int TOLERANCE = 1;
     private boolean isActive = true;
+    public UpdateAction updateActionClass;
 
     public RRPIDMotor(DcMotor motor, double p, double i, double d)
     {
@@ -31,6 +32,12 @@ public class RRPIDMotor {
             motor.setMode(RunMode.RUN_WITHOUT_ENCODER);
         }
         this.p = p; this.i = i; this.d = d;
+    }
+
+    public RRPIDMotor(DcMotor motor, double p, double i, double d, Telemetry telemetry)
+    {
+        this(motor, p, i, d);
+        updateActionClass = new UpdateAction(telemetry);
     }
 
     protected double clamp(double x, double min, double max) {
@@ -61,6 +68,21 @@ public class RRPIDMotor {
                 return isActive;
             }
         };
+    }
+
+    private class UpdateAction implements Action {
+            private Telemetry telemetry;
+            private UpdateAction(Telemetry telemetry) {
+                this.telemetry = telemetry;
+            }
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                double startTime = clock.getTimeSeconds();
+                update(telemetry);
+                telemetry.addLine(Double.toString(clock.getTimeSeconds()-startTime));
+                return isActive;
+            }
     }
 
     public int getTarget() {return target;}
@@ -131,6 +153,7 @@ public class RRPIDMotor {
         else
             motor.setPower(0);
         if (telemetry != null) {
+            telemetry.addLine("Error: " + error);
             telemetry.addLine("Output -> P: " + round(pOutput) + "  I: " + round(iOutput) + " D: " + round(dOutput));
         }
     }

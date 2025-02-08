@@ -34,7 +34,7 @@ public class RRRightSideAuto extends WaitingAuto {
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
-        arm = new RRArm(hardwareMap, gamepad2);
+        arm = new RRArm(hardwareMap, gamepad2, telemetry);
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(9, -64, Math.PI/2));
 

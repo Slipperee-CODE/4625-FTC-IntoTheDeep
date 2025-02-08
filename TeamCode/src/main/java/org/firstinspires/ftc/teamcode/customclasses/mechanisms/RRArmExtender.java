@@ -59,12 +59,12 @@ public class RRArmExtender extends RRMechanism {
 
     private final int TOLERANCE = 10; // in ticks
 
-    public RRArmExtender(HardwareMap hardwareMap, CustomGamepad gamepad){
-        this(hardwareMap);
+    public RRArmExtender(HardwareMap hardwareMap, CustomGamepad gamepad, Telemetry telemetry){
+        this(hardwareMap, telemetry);
         this.gamepad = gamepad;
     }
 
-    public RRArmExtender(HardwareMap hardwareMap){
+    public RRArmExtender(HardwareMap hardwareMap, Telemetry telemetry){
         DcMotor farPivotMotor = hardwareMap.get(DcMotor.class, "farPivotMotor");
         DcMotor closePivotMotor = hardwareMap.get(DcMotor.class, "closePivotMotor");
         magneticLimitSwitch = hardwareMap.get(DigitalChannel.class, "magneticLimitSwitch");
@@ -81,8 +81,8 @@ public class RRArmExtender extends RRMechanism {
 
         closePivotMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        farPivotPIDMotor = new RRPIDMotor(farPivotMotor, P, I, D);
-        closePivotPIDMotor = new RRPIDMotor(closePivotMotor, P, I, D);
+        farPivotPIDMotor = new RRPIDMotor(farPivotMotor, P, I, D, telemetry);
+        closePivotPIDMotor = new RRPIDMotor(closePivotMotor, P, I, D, telemetry);
         farPivotPIDMotor.ResetPID();
         closePivotPIDMotor.ResetPID();
     }

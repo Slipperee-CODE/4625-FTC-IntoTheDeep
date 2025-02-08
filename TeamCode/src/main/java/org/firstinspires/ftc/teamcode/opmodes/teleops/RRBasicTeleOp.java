@@ -30,7 +30,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
 
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
-        arm = new RRArm(hardwareMap, gamepad2);
+        arm = new RRArm(hardwareMap, gamepad2, telemetry);
         stateHandler = new RRStateHandler(roadrunnerDrivetrain, gamepad1);
     }
 
