@@ -103,13 +103,22 @@ public class RRLeftSideAuto extends WaitingAuto {
     @Override
     public void update() {
         //telemetry.update();
+        runActions();
+    }
+
+    @Override
+    protected void startBeforeWait() {
+        //runningActions.add(arm.queueUpdateActions());
     }
 
     @Override
     protected void startAfterWait() {
-        Actions.runBlocking(
+        runningActions.add(
                 new ParallelAction(
-                        arm.queueUpdateActions(),
+                        arm.armPivoter.leftPivotPIDMotor.updateAction(),
+                        arm.armPivoter.rightPivotPIDMotor.updateAction(),
+                        arm.armExtender.farPivotPIDMotor.updateAction(),
+                        arm.armExtender.closePivotPIDMotor.updateAction(),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
                                 //samplePickupSequenceAction(moveToSample2Pickup),
