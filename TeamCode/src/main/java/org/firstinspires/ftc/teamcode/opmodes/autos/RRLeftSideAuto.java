@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -11,6 +14,8 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.customclasses.helpers.Clock;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.WaitingAuto;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
@@ -38,11 +43,15 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSample4Place;
     private Action park;
 
+    private Clock clock;
+    private double startTime = 0.0;
+
     @Override
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
+        clock = new Clock();
 
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI/2));
@@ -99,25 +108,31 @@ public class RRLeftSideAuto extends WaitingAuto {
     @Override
     protected void update(){
         runActions();
+        telemetry.update();
     }
 
     @Override
     protected void startAfterWait() {
         runningActions.add(
                 new ParallelAction(
+                        new InstantAction(() -> startTime = clock.getTimeSeconds()),
                         arm.armPivoter.leftPivotPIDMotor.updateAction(),
                         arm.armPivoter.rightPivotPIDMotor.updateAction(),
                         arm.armExtender.closePivotPIDMotor.updateAction(),
                         arm.armExtender.farPivotPIDMotor.updateAction(),
 
                         new SequentialAction(
-                                samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place)
+                                moveToPreSample1Place,
+                                new SleepAction(5),
+                                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                                //samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place)
                                 //samplePickupSequenceAction(moveToSample2Pickup)
                                 //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
                                 //samplePickupSequenceAction(moveToSample3Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
-                        )
+                        ),
+                        new InstantAction(() -> telemetry.addData("Frame Time", clock.getTimeSeconds()-startTime))
                 )
         );
     }
@@ -129,8 +144,9 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
-                //enterTrajectory,
-                new SleepAction(2),
+                enterTrajectory,
+                new InstantAction(() -> robotDrivetrain.setAllMotorPowers(0)),
+                new SleepAction(5),
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
                 /*
                 new SleepAction(5),
