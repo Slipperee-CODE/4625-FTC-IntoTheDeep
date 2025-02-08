@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.autos;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -38,15 +41,15 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSample4Place;
     private Action park;
 
+    private boolean shouldMotorsBeRunning = false;
+
     @Override
     public void init() {
         super.init();
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
 
-
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI/2));
-
 
         moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .setTangent(Math.PI/2)
@@ -54,37 +57,37 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
-        moveToSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToSample1Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI/2)
                 .build();
 
 
-        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48, -48, Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
-        moveToSample2Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
 
-        moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI/2)
                 .build();
 
 
-        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58, -48, Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
-        moveToSample3Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        moveToSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50, -50, Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-54, -54), Math.PI/4)
                 .build();
         
-        park = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54, -54, Math.PI/4))
                 .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();
     }
@@ -98,37 +101,55 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     public void update() {
-        runActions();
+
+    }
+
+    private Action ManualUpdateOfPIDMotors(){
+        return new Action() {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (shouldMotorsBeRunning){
+                    arm.queueActions();
+                }
+                return shouldMotorsBeRunning;
+            }
+        };
     }
 
     @Override
     protected void startAfterWait() {
-        runningActions.add(arm.queueUpdateActions());
+        shouldMotorsBeRunning = true;
         Actions.runBlocking(
+                new ParallelAction(
+                        ManualUpdateOfPIDMotors(),
                         new SequentialAction(
                                 samplePlaceSequenceAction(moveToPreSample1Place, moveToSample1Place),
-                                samplePickupSequenceAction(moveToSample2Pickup),
+                                //samplePickupSequenceAction(moveToSample2Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample2Place, moveToSample2Place),
                                 //samplePickupSequenceAction(moveToSample3Pickup),
                                 //samplePlaceSequenceAction(moveToPreSample3Place, moveToSample3Place),
                                 //park,
 
-                                new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
+                                new InstantAction(() -> shouldMotorsBeRunning = false)
+                                //new InstantAction(() -> arm.deactivatePIDMotors()) //SUPER IMPORTANT LINE BECAUSE IT PREVENTS AN INFINITE LOOP WHEN STOPPED
                         )
+                )
+
         );
     }
 
     @Override
     public void stop(){
-        arm.deactivatePIDMotors();
+        shouldMotorsBeRunning = false;
+        //arm.deactivatePIDMotors();
     }
 
     private Action samplePlaceSequenceAction(Action enterTrajectory, Action placeTrajectory) {
         return new SequentialAction(
                 enterTrajectory,
                 new SleepAction(2),
-                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
-
+                new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET))
+                /*
                 new SleepAction(5),
 
                 arm.preSampleDeposit(),
@@ -149,6 +170,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
                 new SleepAction(5)
+                 */
         );
     }
 

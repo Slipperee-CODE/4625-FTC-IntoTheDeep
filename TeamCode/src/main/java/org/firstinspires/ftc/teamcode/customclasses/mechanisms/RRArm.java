@@ -170,7 +170,8 @@ public class RRArm extends RRMechanism {
 
     @Override
     public void queueActions() {
-
+        armPivoter.queueActions();
+        armExtender.queueActions();
     }
 
     public Action queueUpdateActions(){
