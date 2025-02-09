@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.RRMechanism;
 
@@ -114,7 +115,7 @@ public class RRClaw extends RRMechanism {
     }
 
     @Override
-    public void queueActions() {
+    public void queueActions(Telemetry telemetry) {
 
     }
 

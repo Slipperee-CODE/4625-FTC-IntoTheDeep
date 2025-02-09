@@ -167,10 +167,9 @@ public class RRArm extends RRMechanism {
         armExtender.SetExtension(armState.extensionPos);
     }
 
-    @Override
-    public void queueActions() {
-        armPivoter.queueActions();
-        armExtender.queueActions();
+    public void queueActions(Telemetry telemetry) {
+        armPivoter.queueActions(telemetry);
+        armExtender.queueActions(telemetry);
     }
 
     public Action queueUpdateActions(){

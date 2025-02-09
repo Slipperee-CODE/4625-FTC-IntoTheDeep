@@ -11,7 +11,7 @@ public abstract class RRMechanism {
     protected CustomGamepad gamepad;
     protected List<Action> runningActions = null;
 
-    public abstract void queueActions();
+    public abstract void queueActions(Telemetry telemetry);
 
     public abstract Action queueUpdateActions();
 }

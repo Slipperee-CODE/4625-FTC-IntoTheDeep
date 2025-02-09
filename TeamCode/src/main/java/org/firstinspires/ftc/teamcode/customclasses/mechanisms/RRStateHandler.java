@@ -56,7 +56,7 @@ public class RRStateHandler extends RRMechanism {
     }
 
     @Override
-    public void queueActions() {
+    public void queueActions(Telemetry telemetry) {
 
     }
 

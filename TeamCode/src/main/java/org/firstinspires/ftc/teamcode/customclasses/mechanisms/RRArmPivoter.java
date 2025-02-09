@@ -90,10 +90,9 @@ public class RRArmPivoter extends RRMechanism {
         return (((leftPivotPIDMotor.getPos() + rightPivotPIDMotor.getPos()) / 2.0f)/TICKS_FOR_90_DEGREES)*Math.PI/2;
     }
 
-    @Override
-    public void queueActions() {
-        leftPivotPIDMotor.update();
-        rightPivotPIDMotor.update();
+    public void queueActions(Telemetry telemetry) {
+        leftPivotPIDMotor.update(telemetry);
+        rightPivotPIDMotor.update(telemetry);
     }
 
     @Override
