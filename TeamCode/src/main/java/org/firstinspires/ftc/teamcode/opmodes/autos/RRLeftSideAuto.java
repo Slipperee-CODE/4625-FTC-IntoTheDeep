@@ -164,8 +164,8 @@ public class RRLeftSideAuto extends WaitingAuto {
                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
                     new SleepAction(2),
-                    moveToSample3Pickup,
-                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
+                    moveToSample3Pickup, //Might be able to combine
+                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)), //this two lines in one parallel action
                     new SleepAction(2),
 
                     arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
