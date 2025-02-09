@@ -27,7 +27,6 @@ public class RRBasicTeleOp extends RRCustomOpMode
         //Load roadrunner pose2D from auto instead of doing the line below
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(0, 0, 0)); // temp line
 
-
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
@@ -42,7 +41,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
 
     @Override
     public void start(){
-        runningActions.add(arm.queueUpdateActions());
+        //runningActions.add(arm.queueUpdateActions());
         //runningActions.add(arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB));
     }
 
@@ -74,7 +73,9 @@ public class RRBasicTeleOp extends RRCustomOpMode
         }
 
         runningActions = arm.queueActions(runningActions, telemetry);
-        //runningActions = stateHandler.queueActions(runningActions, telemetry);
+        runningActions = stateHandler.queueActions(runningActions, telemetry);
+        arm.queueActions(telemetry);
         runActions();
+        telemetry.update();
     }
 }

@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode.customclasses.mechanisms;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,6 +25,7 @@ public class RRStateHandler extends RRMechanism {
     private Pose2d secondEndpoint;
 
     private MecanumDrive roadrunnerDrivetrain;
+    Action goToOtherEndpoint = null;
 
     public RRStateHandler(MecanumDrive roadrunnerDrivetrain, CustomGamepad gamepad){
         this.roadrunnerDrivetrain = roadrunnerDrivetrain;
@@ -35,24 +41,62 @@ public class RRStateHandler extends RRMechanism {
             }
         }
 
-        if (gamepad.bDown) {
-            if (gamepad.bToggle) {
-                Action goToFirstEndPoint = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+        if (gamepad.aDown) {
+            if (gamepad.aToggle) {
+                if (goToOtherEndpoint != null){
+                    ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
+                }
+                goToOtherEndpoint = new CancelableFollowTrajectoryAction(
+                        roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                         .strafeToLinearHeading(firstEndpoint.position, firstEndpoint.heading)
-                        .build();
+                        .build()
+                );
                 runningActions.add(
-                        goToFirstEndPoint
+                        goToOtherEndpoint
                 );
             } else {
-                Action goToSecondEndPoint = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
+                if (goToOtherEndpoint != null){
+                    ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
+                }
+                goToOtherEndpoint = new CancelableFollowTrajectoryAction(
+                        roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                         .strafeToLinearHeading(secondEndpoint.position, secondEndpoint.heading)
-                        .build();
+                        .build()
+                );
                 runningActions.add(
-                        goToSecondEndPoint
+                        goToOtherEndpoint
                 );
             }
         }
+
+        if (gamepad.left_stick_x != 0 || gamepad.left_stick_y != 0){
+            ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
+        }
+
         return runningActions;
+    }
+
+    public class CancelableFollowTrajectoryAction implements Action {
+        private Action action;
+        private boolean cancelled = false;
+
+        public CancelableFollowTrajectoryAction(Action action) {
+            this.action = action;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if (cancelled) {
+                roadrunnerDrivetrain.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
+                return false;
+            }
+
+            return action.run(telemetryPacket);
+        }
+
+        public void cancelAbruptly() {
+            cancelled = true;
+        }
     }
 
     @Override
