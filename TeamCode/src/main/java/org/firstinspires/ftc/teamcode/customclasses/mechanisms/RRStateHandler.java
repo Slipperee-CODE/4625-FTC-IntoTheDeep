@@ -21,8 +21,8 @@ import java.util.List;
 
 public class RRStateHandler extends RRMechanism {
 
-    private Pose2d firstEndpoint;
-    private Pose2d secondEndpoint;
+    private Pose2d firstEndpoint = null;
+    private Pose2d secondEndpoint = null;
 
     private MecanumDrive roadrunnerDrivetrain;
     Action goToOtherEndpoint = null;
@@ -32,7 +32,7 @@ public class RRStateHandler extends RRMechanism {
         this.gamepad = gamepad;
     }
 
-    public List<Action> queueActions(List<Action> runningActions, Telemetry telemetry) {
+    public Action handleTrajectories(Telemetry telemetry) {
         if (gamepad.yDown) {
             if (gamepad.yToggle) {
                 firstEndpoint = roadrunnerDrivetrain.pose;
@@ -41,7 +41,7 @@ public class RRStateHandler extends RRMechanism {
             }
         }
 
-        if (gamepad.aDown) {
+        if (gamepad.aDown && firstEndpoint != null && secondEndpoint != null) {
             if (gamepad.aToggle) {
                 if (goToOtherEndpoint != null){
                     ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
@@ -51,9 +51,7 @@ public class RRStateHandler extends RRMechanism {
                         .strafeToLinearHeading(firstEndpoint.position, firstEndpoint.heading)
                         .build()
                 );
-                runningActions.add(
-                        goToOtherEndpoint
-                );
+                return goToOtherEndpoint;
             } else {
                 if (goToOtherEndpoint != null){
                     ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
@@ -63,9 +61,7 @@ public class RRStateHandler extends RRMechanism {
                         .strafeToLinearHeading(secondEndpoint.position, secondEndpoint.heading)
                         .build()
                 );
-                runningActions.add(
-                        goToOtherEndpoint
-                );
+                return goToOtherEndpoint;
             }
         }
 
@@ -73,7 +69,7 @@ public class RRStateHandler extends RRMechanism {
             ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
         }
 
-        return runningActions;
+        return null;
     }
 
     public class CancelableFollowTrajectoryAction implements Action {

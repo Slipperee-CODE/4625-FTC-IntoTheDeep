@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleops;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.customclasses.helpers.CustomGamepad;
@@ -9,6 +11,8 @@ import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRArm;
 import org.firstinspires.ftc.teamcode.customclasses.helpers.RRCustomOpMode;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRClaw;
 import org.firstinspires.ftc.teamcode.customclasses.mechanisms.RRStateHandler;
+
+import java.util.List;
 
 @Config
 @TeleOp(name="RRBasicTeleOp", group="TeleOp")
@@ -72,8 +76,20 @@ public class RRBasicTeleOp extends RRCustomOpMode
             robotDrivetrain.emulateController(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x * 1.0f);
         }
 
-        runningActions = arm.queueActions(runningActions, telemetry);
-        runningActions = stateHandler.queueActions(runningActions, telemetry);
+
+        List<Action> armActions = arm.queueActions(runningActions, telemetry);
+        Action stateHandlerAction = stateHandler.handleTrajectories(telemetry);
+        if (stateHandlerAction != null){
+            armActions.add(stateHandlerAction);
+        }
+
+        ParallelAction armAndStateHandlerActions =
+            new ParallelAction(
+                armActions.toArray(new Action[0])
+            );
+        runningActions.add(armAndStateHandlerActions);
+
+
         arm.queueActions(telemetry);
         runActions();
         telemetry.update();
