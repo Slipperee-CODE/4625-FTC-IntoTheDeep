@@ -118,19 +118,19 @@ public class RRLeftSideAuto extends WaitingAuto {
                      ),
 
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
-                    new SleepAction(1),
-                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
-                    new SleepAction(1),
+                     new SleepAction(0.5f),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                     new SleepAction(1),
 
-                    moveToSample1Place,
+                     moveToSample1Place,
 
-                    arm.sampleDeposit(),
+                     arm.sampleDeposit(),
 
-                    new SleepAction(.25),
+                     new SleepAction(.25),
 
-                    arm.setupForSampleGrab(1.0f),
+                     arm.setupForSampleGrab(1.0f),
 
-                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
                      new SleepAction(2),
                      moveToSample2Pickup,
@@ -140,10 +140,66 @@ public class RRLeftSideAuto extends WaitingAuto {
                      arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
                      new SleepAction(0.25),
                      arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
+                     new SleepAction(0.25),
 
+                     new ParallelAction(
+                             arm.preSampleDeposit(),
+                             new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                             moveToPreSample2Place
+                     ),
+
+                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                    new SleepAction(0.5f),
+                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                    new SleepAction(1),
+
+                    moveToSample2Place,
+
+                    arm.sampleDeposit(),
+
+                    new SleepAction(.25),
+
+                    arm.setupForSampleGrab(1.0f),
+
+                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+
+                    new SleepAction(2),
+                    moveToSample3Pickup,
+                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
+                    new SleepAction(2),
+
+                    arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
+                    new SleepAction(0.25),
+                    arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
+                    new SleepAction(0.25),
+
+                    new ParallelAction(
+                            arm.preSampleDeposit(),
+                            new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                            moveToPreSample3Place
+                    ),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                     new SleepAction(0.5f),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SPECIMEN_PLACE_UPPER_BUCKET)),
+                     new SleepAction(1),
+
+                     moveToSample3Place,
+
+                     arm.sampleDeposit(),
+
+                     new SleepAction(.25),
+
+                     arm.setupForSampleGrab(1.0f),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
                      new SleepAction(2),
-                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT))
-            )
+                     new ParallelAction(
+                             arm.claw.setClawState(RRClaw.ClawPos.RESET),
+                             new InstantAction(() -> arm.setArmState(RRArm.ArmState.SAFE_DEFAULT))
+                     )
+
+                )
         );
     }
 }
