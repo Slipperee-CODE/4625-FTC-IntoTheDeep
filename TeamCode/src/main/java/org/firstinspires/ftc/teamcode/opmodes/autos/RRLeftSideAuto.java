@@ -43,6 +43,8 @@ public class RRLeftSideAuto extends WaitingAuto {
     private Action moveToSample4Place;
     private Action park;
 
+    private boolean shouldUpdatePIDMotors = true;
+
     @Override
     public void init() {
         super.init();
@@ -64,11 +66,11 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-48, -48), Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(-47, -45), Math.PI/2)
                 .build();
 
 
-        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48,-48,Math.PI/2))
+        moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-47,-45,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
@@ -77,11 +79,11 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-54,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-58, -48), Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(-53, -45), Math.PI/2)
                 .build();
 
 
-        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-48,Math.PI/2))
+        moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-53,-45,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
@@ -103,7 +105,14 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     @Override
     protected void update(){
-        arm.queueActions(telemetry);
+        if (shouldUpdatePIDMotors){
+            arm.queueActions(telemetry);
+        } else {
+            arm.armPivoter.rightPivotPIDMotor.setRawPower(0);
+            arm.armPivoter.leftPivotPIDMotor.setRawPower(0);
+            arm.armExtender.closePivotPIDMotor.setRawPower(0);
+            arm.armExtender.farPivotPIDMotor.setRawPower(0);
+        }
         runActions();
         telemetry.update();
     }
@@ -112,10 +121,8 @@ public class RRLeftSideAuto extends WaitingAuto {
     protected void startAfterWait() {
         runningActions.add(
              new SequentialAction(
-                     new ParallelAction(
-                             arm.preSampleDeposit(),
-                             moveToPreSample1Place
-                     ),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT),
+                     moveToPreSample1Place,
 
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
                      new SleepAction(0.5f),
@@ -124,15 +131,17 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                      moveToSample1Place,
 
-                     arm.sampleDeposit(),
+                     arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+                     new SleepAction(.25),
+                     arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
 
                      new SleepAction(.25),
 
-                     arm.setupForSampleGrab(1.0f),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_GRAB),
 
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
-                     new SleepAction(2),
+                     new SleepAction(1.5f),
                      moveToSample2Pickup,
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)),
                      new SleepAction(2),
@@ -142,11 +151,11 @@ public class RRLeftSideAuto extends WaitingAuto {
                      arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                      new SleepAction(0.25),
 
-                     new ParallelAction(
-                             arm.preSampleDeposit(),
-                             new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
-                             moveToPreSample2Place
-                     ),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                     moveToPreSample2Place,
+
 
                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
                     new SleepAction(0.5f),
@@ -155,15 +164,17 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                     moveToSample2Place,
 
-                    arm.sampleDeposit(),
+                     arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+                     new SleepAction(.25),
+                     arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
 
                     new SleepAction(.25),
 
-                    arm.setupForSampleGrab(1.0f),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_GRAB),
 
-                    new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
 
-                    new SleepAction(2),
+                    new SleepAction(1.5f),
                     moveToSample3Pickup, //Might be able to combine
                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB)), //this two lines in one parallel action
                     new SleepAction(2),
@@ -173,11 +184,11 @@ public class RRLeftSideAuto extends WaitingAuto {
                     arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
                     new SleepAction(0.25),
 
-                    new ParallelAction(
-                            arm.preSampleDeposit(),
-                            new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
-                            moveToPreSample3Place
-                    ),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                     moveToPreSample3Place,
+
 
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
                      new SleepAction(0.5f),
@@ -186,19 +197,23 @@ public class RRLeftSideAuto extends WaitingAuto {
 
                      moveToSample3Place,
 
-                     arm.sampleDeposit(),
+                     arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+                     new SleepAction(.25),
+                     arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
 
                      new SleepAction(.25),
 
-                     arm.setupForSampleGrab(1.0f),
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_GRAB),
 
                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
                      new SleepAction(2),
-                     new ParallelAction(
-                             arm.claw.setClawState(RRClaw.ClawPos.RESET),
-                             new InstantAction(() -> arm.setArmState(RRArm.ArmState.SAFE_DEFAULT))
-                     )
 
+                     arm.claw.setClawState(RRClaw.ClawPos.RESET),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.SAFE_DEFAULT)),
+
+                     new SleepAction(1),
+
+                     new InstantAction(() -> shouldUpdatePIDMotors=false)
                 )
         );
     }
