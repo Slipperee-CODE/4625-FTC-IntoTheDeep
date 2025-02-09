@@ -36,7 +36,7 @@ public class RRArmExtender extends RRMechanism {
         AUTO_SPECIMEN_PLACE_UPPER_BAR(450),
         AUTO_SAMPLE_PLACE_UPPER_BUCKET(4000),
         AUTO_SAFE_EXTENSION_HEIGHT(750),
-        AUTO_SAMPLE_GRAB(2000);
+        AUTO_SAMPLE_GRAB(1500); //down from 2000
 
         int pos;
         ExtensionPos(int pos) {this.pos = pos;}

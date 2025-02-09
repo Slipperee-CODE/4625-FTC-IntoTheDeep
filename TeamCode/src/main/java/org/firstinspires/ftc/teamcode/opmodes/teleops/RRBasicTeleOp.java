@@ -34,7 +34,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
         gamepad1 = new CustomGamepad(this,1);
         gamepad2 = new CustomGamepad(this, 2);
         arm = new RRArm(hardwareMap, gamepad2);
-        stateHandler = new RRStateHandler(roadrunnerDrivetrain, gamepad1);
+        stateHandler = new RRStateHandler(gamepad1);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
         gamepad1.update();
         gamepad2.update();
 
-        if (gamepad1.aDown) {
+        if (gamepad1.guideDown) {
             robotDrivetrain.switchDirection();
         }
         if (gamepad1.dpad_down || gamepad1.dpad_up || gamepad1.dpad_left || gamepad1.dpad_right) {
@@ -78,7 +78,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
 
 
         List<Action> armActions = arm.queueActions(runningActions, telemetry);
-        Action stateHandlerAction = stateHandler.handleTrajectories(telemetry);
+        Action stateHandlerAction = stateHandler.handleTrajectories(roadrunnerDrivetrain, telemetry);
         if (stateHandlerAction != null){
             armActions.add(stateHandlerAction);
         }
@@ -89,7 +89,7 @@ public class RRBasicTeleOp extends RRCustomOpMode
             );
         runningActions.add(armAndStateHandlerActions);
 
-
+        roadrunnerDrivetrain.updatePoseEstimate();
         arm.queueActions(telemetry);
         runActions();
         telemetry.update();

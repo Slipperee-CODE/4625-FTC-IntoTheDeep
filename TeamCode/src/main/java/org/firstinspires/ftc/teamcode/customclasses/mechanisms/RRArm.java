@@ -126,15 +126,14 @@ public class RRArm extends RRMechanism {
             isBarSelected = false;
             if (gamepad.gamepad.left_trigger > 0) {
                 setArmState(ArmState.DEFAULT);
-            } else {
+            } else if (CURR_STATE == ArmState.UPPER_BUCKET){
                 runningActions.add(
-                        new SequentialAction(
-                                new InstantAction(() -> setArmState(ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-                                new SleepAction(1.5f),
-                                new InstantAction(() -> setArmState(ArmState.SAFE_DEFAULT))
-                        )
+                        new InstantAction(() -> setArmState(ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY))
                 );
-
+            } else if (CURR_STATE == ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY){
+                runningActions.add(
+                        new InstantAction(() -> setArmState(ArmState.SAFE_DEFAULT))
+                );
             }
         }
 
