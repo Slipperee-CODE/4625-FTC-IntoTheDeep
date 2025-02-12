@@ -76,6 +76,7 @@ public class RRClaw extends RRMechanism {
 
     public Action emulatedClawRotation(float gamepadLeftStickX) {
         return new InstantAction(() -> rotationServo.setPosition(Math.max(0, 1-gamepadLeftStickX)));
+        //return new InstantAction(() -> rotationServo.setPosition(0.5f+0.5f*gamepadLeftStickX));
     }
 
     public Action setClawState(ClawPos clawPos){
