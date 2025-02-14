@@ -16,18 +16,18 @@ import java.util.List;
 
 public class RRClaw extends RRMechanism {
     public enum ClawPos{
-        PRE_SPECIMEN_GRAB(SPECIMEN_GRAB_WRIST_POS, CLAW_NOT_GRABBING_POS, 0), //third parameter was 0
-        SPECIMEN_GRAB(SPECIMEN_GRAB_WRIST_POS, CLAW_GRABBING_POS,0), //third parameter was 0
+        PRE_SPECIMEN_GRAB(SPECIMEN_GRAB_WRIST_POS, CLAW_NOT_GRABBING_POS), //third parameter was 0
+        SPECIMEN_GRAB(SPECIMEN_GRAB_WRIST_POS, CLAW_GRABBING_POS), //third parameter was 0
         PRE_SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_NOT_GRABBING_POS),
         SAMPLE_GRAB(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS, -1),
         POST_GRAB(SPECIMEN_GRAB_WRIST_POS-0.1f, CLAW_GRABBING_POS),
         RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS), //Also works as RELEASE_SPECIMEN
 
-        RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 0.5f),
+        RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 1),
         POST_RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 0),
 
 
-        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS+0.05f, CLAW_GRABBING_POS, 0.5f),
+        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS+0.05f, CLAW_GRABBING_POS, 0.85f),
         PRE_SPECIMEN_DEPOSIT(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS);
 
         float wristServoPos, clawServoPos, rotationServoPos;
@@ -40,7 +40,7 @@ public class RRClaw extends RRMechanism {
         ClawPos(float wristServoPos, float clawServoPos) {
             this.wristServoPos = wristServoPos;
             this.clawServoPos = clawServoPos;
-            this.rotationServoPos = 1.0f;
+            this.rotationServoPos = 0.6f;
         }
     }
 
@@ -71,12 +71,12 @@ public class RRClaw extends RRMechanism {
         rotationServo = hardwareMap.get(Servo.class, "rotationServo");
         wristServo.setPosition(STOWED_WRIST_POS);
         clawServo.setPosition(CLAW_NOT_GRABBING_POS);
-        rotationServo.setPosition(1.0f);
+        rotationServo.setPosition(0.6f);
     }
 
     public Action emulatedClawRotation(float gamepadLeftStickX) {
-        return new InstantAction(() -> rotationServo.setPosition(Math.max(0, 1-gamepadLeftStickX)));
-        //return new InstantAction(() -> rotationServo.setPosition(0.5f+0.5f*gamepadLeftStickX));
+        //return new InstantAction(() -> rotationServo.setPosition(Math.max(0, 1-gamepadLeftStickX)));
+        return new InstantAction(() -> rotationServo.setPosition(Math.min(1,0.6f+0.5f*gamepadLeftStickX)));
     }
 
     public Action setClawState(ClawPos clawPos){
