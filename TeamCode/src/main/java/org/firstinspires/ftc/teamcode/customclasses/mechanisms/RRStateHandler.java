@@ -57,7 +57,7 @@ public class RRStateHandler extends RRMechanism {
         }
 
         if (gamepad.aDown && firstEndpoint != null && secondEndpoint != null) {
-            if (gamepad.aToggle) {
+            if (firstEndPointIsCloser(roadrunnerDrivetrain)) {
                 if (goToOtherEndpoint != null){
                     ((CancelableFollowTrajectoryAction) goToOtherEndpoint).cancelAbruptly();
                 }
@@ -91,6 +91,20 @@ public class RRStateHandler extends RRMechanism {
         }
 
         return null;
+    }
+
+    private boolean firstEndPointIsCloser(MecanumDrive roadrunnerDrivetrain){
+        double distanceToFirstEndPoint = Math.pow(
+                Math.pow(roadrunnerDrivetrain.pose.position.x - firstEndpoint.position.x,2)
+                        + Math.pow(roadrunnerDrivetrain.pose.position.y - firstEndpoint.position.y,2)
+                        ,0.5);
+
+        double distanceToSecondEndPoint = Math.pow(
+                Math.pow(roadrunnerDrivetrain.pose.position.x - secondEndpoint.position.x,2)
+                        + Math.pow(roadrunnerDrivetrain.pose.position.y - secondEndpoint.position.y,2)
+                        ,0.5);
+
+        return distanceToFirstEndPoint < distanceToSecondEndPoint;
     }
 
     public class CancelableFollowTrajectoryAction implements Action {
