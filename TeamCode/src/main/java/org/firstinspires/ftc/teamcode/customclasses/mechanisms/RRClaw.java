@@ -23,11 +23,11 @@ public class RRClaw extends RRMechanism {
         POST_GRAB(SPECIMEN_GRAB_WRIST_POS-0.1f, CLAW_GRABBING_POS),
         RESET(STOWED_WRIST_POS, CLAW_NOT_GRABBING_POS), //Also works as RELEASE_SPECIMEN
 
-        RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 1),
+        RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 0),
         POST_RELEASE_SAMPLE(SAMPLE_DEPOSIT_WRIST_POS, CLAW_NOT_GRABBING_POS, 0),
 
 
-        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS+0.05f, CLAW_GRABBING_POS, 0.85f),
+        PRE_SAMPLE_DEPOSIT(SAMPLE_DEPOSIT_WRIST_POS, CLAW_GRABBING_POS, 0),
         PRE_SPECIMEN_DEPOSIT(SUBMERSIBLE_GRAB_WRIST_POS, CLAW_GRABBING_POS);
 
         float wristServoPos, clawServoPos, rotationServoPos;
@@ -45,14 +45,14 @@ public class RRClaw extends RRMechanism {
     }
 
     private static final float STOWED_WRIST_POS = .66f;
-    private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.35f;
+    private static final float SAMPLE_DEPOSIT_WRIST_POS = 0.45f;
     private static final float POST_GRAB_WRIST_POS = 0.45f;
 
     private static final float SUBMERSIBLE_GRAB_WRIST_POS = 0.0f;
     private static final float SPECIMEN_GRAB_WRIST_POS = 0.35f; //was .35f for all other meets || was .4 for Meet 2 || THIS MIGHT NEED TO BE CHANGED FOR OFF WALL GRABBING
 
-    private static final float CLAW_NOT_GRABBING_POS = 0.15f;
-    private static final float CLAW_GRABBING_POS = 0.45f; //MAKE THIS MOREEEE
+    private static final float CLAW_NOT_GRABBING_POS = 0.2f;
+    private static final float CLAW_GRABBING_POS = 0.475f; //MAKE THIS MOREEEE
 
     private final Servo wristServo;
     private final Servo clawServo;
@@ -110,6 +110,7 @@ public class RRClaw extends RRMechanism {
     }
 
     public boolean MatchesCurrentClawPos(ClawPos clawPos){
+        if (this.currentClawPos == null) {return false;}
         return this.currentClawPos.clawServoPos == clawPos.clawServoPos
                 && this.currentClawPos.wristServoPos == clawPos.wristServoPos
                 && this.currentClawPos.rotationServoPos == clawPos.rotationServoPos;
