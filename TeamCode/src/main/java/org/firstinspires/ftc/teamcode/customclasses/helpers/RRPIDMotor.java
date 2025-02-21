@@ -133,6 +133,7 @@ public class RRPIDMotor {
             motor.setPower(0);
         if (telemetry != null) {
             telemetry.addData("Error", error);
+            telemetry.addData("Target", target);
             telemetry.addLine("Output -> P: " + round(pOutput) + "  I: " + round(iOutput) + " D: " + round(dOutput));
         }
     }

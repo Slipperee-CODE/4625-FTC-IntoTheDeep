@@ -24,7 +24,7 @@ import java.util.List;
 public class RRArmExtender extends RRMechanism {
     public enum ExtensionPos{
         MIN_EXTENSION(-10),
-        MAX_EXTENSION(4000), //4400 max
+        MAX_EXTENSION(4000), //4400 max (probably gonna end up being way higher)
         DEFAULT_EXTENSION(400), //upped from 100
         SUBMERSIBLE_EXTENSION(250),
         LOWER_BUCKET_EXTENSION(650),
