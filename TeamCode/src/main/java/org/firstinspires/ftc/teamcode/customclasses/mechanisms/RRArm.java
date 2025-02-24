@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -29,7 +28,7 @@ public class RRArm extends RRMechanism {
         WALL_GRAB(RRArmPivoter.PivotPos.WALL_GRAB_PIVOT, RRArmExtender.ExtensionPos.WALL_GRAB_EXTENSION),
 
         AUTO_SPECIMEN_PLACE_UPPER_BAR(RRArmPivoter.PivotPos.UPPER_SPECIMEN_BAR_PIVOT, RRArmExtender.ExtensionPos.AUTO_SPECIMEN_PLACE_UPPER_BAR),
-        AUTO_SPECIMEN_PLACE_UPPER_BUCKET(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAMPLE_PLACE_UPPER_BUCKET),
+        AUTO_SAMPLE_PLACE_UPPER_BUCKET(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAMPLE_PLACE_UPPER_BUCKET),
         AUTO_SAMPLE_GRAB(RRArmPivoter.PivotPos.SAFE_DEFAULT_PIVOT, RRArmExtender.ExtensionPos.AUTO_SAMPLE_GRAB),
         AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY(RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT_BUT_MORE_FORWARD, RRArmExtender.ExtensionPos.AUTO_SAFE_EXTENSION_HEIGHT);
 
