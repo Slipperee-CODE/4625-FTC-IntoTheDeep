@@ -162,6 +162,11 @@ public class RRArm extends RRMechanism {
     public void setArmState(ArmState armState) {
         CURR_STATE = armState;
         armPivoter.SetPivot(armState.pivotPos);
+        if (armState.pivotPos == RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT || armState.pivotPos == RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT_BUT_MORE_FORWARD){
+            armExtender.setSPEED(RRArmExtender.FAST_SPEED);
+        } else {
+            armExtender.setSPEED(RRArmExtender.DEFAULT_SPEED);
+        }
         armExtender.SetExtension(armState.extensionPos);
     }
 

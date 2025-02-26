@@ -50,7 +50,9 @@ public class RRArmExtender extends RRMechanism {
     public static final double I = 0.00001;
     public static final double D = 0.0002;
 
-    private static final float SPEED = 150.0f;
+    public static final float DEFAULT_SPEED = 150.0f;
+    public static final float FAST_SPEED = 200.0f;
+    private static float SPEED = DEFAULT_SPEED;
 
     private boolean limitSwitchWasActiveLastFrame = false;
 
@@ -159,5 +161,9 @@ public class RRArmExtender extends RRMechanism {
     public void deactivate(){
         farPivotPIDMotor.deactivate();
         closePivotPIDMotor.deactivate();
+    }
+
+    public void setSPEED(float speed){
+        SPEED = speed;
     }
 }
