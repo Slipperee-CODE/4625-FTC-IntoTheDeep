@@ -22,20 +22,22 @@ public class RRLeftSideAuto extends WaitingAuto {
 
     private Action moveToPreSample1Place;
     private Action moveToSample1Place;
+
     private Action moveToPreSample2Pickup;
     private Action moveToSample2Pickup;
-
     private Action moveToPreSample2Place;
     private Action moveToSample2Place;
+
     private Action moveToPreSample3Pickup;
     private Action moveToSample3Pickup;
-
     private Action moveToPreSample3Place;
     private Action moveToSample3Place;
-    private Action moveToSample4Pickup;
 
+    private Action moveToPreSample4Pickup;
+    private Action moveToSample4Pickup;
     private Action moveToPreSample4Place;
     private Action moveToSample4Place;
+
     private Action park;
 
     private boolean shouldUpdatePIDMotors = true;
@@ -62,6 +64,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .strafeToLinearHeading(new Vector2d(-56.25, -56.5), Math.PI/4)
                 .build();
 
+
         moveToPreSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-56.5,-56.5,Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-48.5, -50), Math.PI/2)
                 .build();
@@ -69,7 +72,6 @@ public class RRLeftSideAuto extends WaitingAuto {
         moveToSample2Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48.5,-50,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-48.5, -45), Math.PI/2)
                 .build();
-
 
         moveToPreSample2Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-48.5,-45,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
@@ -81,6 +83,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .strafeToLinearHeading(new Vector2d(-56.5, -56.5), Math.PI/4)
                 .build();
 
+
         moveToPreSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-56.5,-56.5,Math.PI/4))
                 .strafeToLinearHeading(new Vector2d(-58, -50), Math.PI/2)
                 .build();
@@ -88,7 +91,6 @@ public class RRLeftSideAuto extends WaitingAuto {
         moveToSample3Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-50,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-58, -45), Math.PI/2)
                 .build();
-
 
         moveToPreSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-45,Math.PI/2))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
@@ -99,7 +101,27 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .turn(Math.PI/16)
                 .strafeToLinearHeading(new Vector2d(-57, -56.75), Math.PI/4)
                 .build();
-        
+
+        //needs to be implemented into the auto trajectory below
+        moveToPreSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-57,-56.75,Math.PI/4))
+                .strafeToLinearHeading(new Vector2d(-52, -25), 0)
+                .build();
+
+        moveToSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-52,-25,0))
+                .strafeToLinearHeading(new Vector2d(-54, -25), 0)
+                .build();
+
+        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-54,-25,0))
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
+                .build();
+
+        moveToSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50,-50,Math.PI/4))
+                .turn(-Math.PI/16)
+                .turn(Math.PI/16)
+                .strafeToLinearHeading(new Vector2d(-57, -56.75), Math.PI/4)
+                .build();
+
+
         park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-57,-56.75,Math.PI/4))
                 .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
                 .build();

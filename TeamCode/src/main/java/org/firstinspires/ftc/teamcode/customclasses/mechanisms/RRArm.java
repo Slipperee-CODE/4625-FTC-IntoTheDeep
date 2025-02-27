@@ -164,8 +164,10 @@ public class RRArm extends RRMechanism {
         armPivoter.SetPivot(armState.pivotPos);
         if (armState.pivotPos == RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT || armState.pivotPos == RRArmPivoter.PivotPos.UPPER_BUCKET_PIVOT_BUT_MORE_FORWARD){
             armExtender.setSPEED(RRArmExtender.FAST_SPEED);
+            armExtender.setPIDs(RRArmExtender.P_FAST, RRArmExtender.I_FAST, RRArmExtender.D_FAST);
         } else {
             armExtender.setSPEED(RRArmExtender.DEFAULT_SPEED);
+            armExtender.setPIDs(RRArmExtender.P, RRArmExtender.I, RRArmExtender.D);
         }
         armExtender.SetExtension(armState.extensionPos);
     }
