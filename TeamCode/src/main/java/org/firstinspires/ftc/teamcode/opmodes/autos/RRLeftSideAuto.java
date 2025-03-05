@@ -51,7 +51,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
 
         roadrunnerDrivetrain.setPoseEstimate(new Pose2d(-38, -64, Math.PI/2));
-        //update sample place 1 and sample place 2 to be closer to bucket
+        
 
         moveToPreSample1Place = roadrunnerDrivetrain.actionBuilder(roadrunnerDrivetrain.pose)
                 .setTangent(Math.PI/2)
@@ -97,16 +97,15 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .strafeToLinearHeading(new Vector2d(-55, -55.75), Math.PI/4)
                 .build();
 
-        //needs to be implemented into the auto trajectory below
         moveToPreSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-55,-55.75,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-53, -43), Math.toRadians(120)) //move more left and more back
+                .strafeToLinearHeading(new Vector2d(-58, -45), Math.toRadians(120))
                 .build();
 
-        moveToSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-53,-43,Math.toRadians(120)))
-                .strafeToLinearHeading(new Vector2d(-53.5, -41), Math.toRadians(120)) //move more more left (slightly) and y=-43
+        moveToSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-45,Math.toRadians(120)))
+                .strafeToLinearHeading(new Vector2d(-58.5, -43), Math.toRadians(120))
                 .build(); //add placement of fourth sample
 
-        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-51,-41,Math.toRadians(120)))
+        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58.5,-43,Math.toRadians(120)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
@@ -245,14 +244,31 @@ public class RRLeftSideAuto extends WaitingAuto {
                      new ParallelAction(
                              new SequentialAction(
                                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_EXTENSION_REDUCTION_FOR_ARM_SAFETY)),
-
                                      new SleepAction(1.5f),
                                      new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_GRAB))
                              ),
                              moveToPreSample4Pickup
                      ),
+                     new SleepAction(0.5f),
+                     moveToSample4Pickup,
 
-                     new SleepAction(2),
+                     arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
+                     new SleepAction(0.25),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAFE_DEFAULT)),
+                     moveToPreSample4Place,
+                     arm.claw.setClawState(RRClaw.ClawPos.PRE_SAMPLE_DEPOSIT),
+
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.UPPER_BUCKET)),
+                     new SleepAction(0.5f),
+                     new InstantAction(() -> arm.setArmState(RRArm.ArmState.AUTO_SAMPLE_PLACE_UPPER_BUCKET)),
+                     new SleepAction(1),
+
+                     moveToSample4Place,
+
+                     arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
+                     new SleepAction(.5),
+                     arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
 
                      new InstantAction(() -> shouldUpdatePIDMotors=false)
                 )
