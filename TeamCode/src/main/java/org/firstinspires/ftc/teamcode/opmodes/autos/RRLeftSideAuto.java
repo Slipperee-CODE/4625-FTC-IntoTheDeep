@@ -94,7 +94,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToSample3Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-50,-50,Math.PI/4))
-                .strafeToLinearHeading(new Vector2d(-55, -55.75), Math.PI/4)
+                .strafeToLinearHeading(new Vector2d(-53.5, -55.75), Math.PI/4)
                 .build();
 
         moveToPreSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-55,-55.75,Math.PI/4))
@@ -102,10 +102,10 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-45,Math.toRadians(120)))
-                .strafeToLinearHeading(new Vector2d(-58.5, -43), Math.toRadians(120))
+                .strafeToLinearHeading(new Vector2d(-59.25, -43), Math.toRadians(120))
                 .build(); //add placement of fourth sample
 
-        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58.5,-43,Math.toRadians(120)))
+        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-59.25,-43,Math.toRadians(120)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
@@ -115,7 +115,7 @@ public class RRLeftSideAuto extends WaitingAuto {
 
 
         park = roadrunnerDrivetrain.actionBuilder(new Pose2d(-56,-55.75,Math.PI/4))
-                .splineToLinearHeading(new Pose2d(-26, -10, Math.PI), 0)
+                .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
     }
 
@@ -269,6 +269,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                      arm.claw.setClawState(RRClaw.ClawPos.RELEASE_SAMPLE),
                      new SleepAction(.5),
                      arm.claw.setClawState(RRClaw.ClawPos.POST_GRAB),
+                     park,
 
                      new InstantAction(() -> shouldUpdatePIDMotors=false)
                 )
