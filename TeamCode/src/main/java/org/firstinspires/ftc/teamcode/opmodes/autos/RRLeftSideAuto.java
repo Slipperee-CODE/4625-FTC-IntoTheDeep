@@ -102,10 +102,10 @@ public class RRLeftSideAuto extends WaitingAuto {
                 .build();
 
         moveToSample4Pickup = roadrunnerDrivetrain.actionBuilder(new Pose2d(-58,-46,Math.toRadians(120)))
-                .strafeToLinearHeading(new Vector2d(-59.25, -43), Math.toRadians(120))
+                .strafeToLinearHeading(new Vector2d(-60, -43), Math.toRadians(120))
                 .build(); //add placement of fourth sample
 
-        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-59.25,-43,Math.toRadians(120)))
+        moveToPreSample4Place = roadrunnerDrivetrain.actionBuilder(new Pose2d(-60,-43,Math.toRadians(120)))
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.PI/4)
                 .build();
 
@@ -251,7 +251,7 @@ public class RRLeftSideAuto extends WaitingAuto {
                      ),
                      new SleepAction(0.5f),
                      moveToSample4Pickup,
-
+                     new SleepAction(0.25f), //new wait to help 4th sample grab
                      arm.claw.setClawState(RRClaw.ClawPos.SAMPLE_GRAB),
                      new SleepAction(0.25),
 
