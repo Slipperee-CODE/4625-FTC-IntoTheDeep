@@ -58,6 +58,47 @@ public class RRArm extends RRMechanism {
         claw = new RRClaw(hardwareMap, gamepad);
     }
 
+    private int kidFriendlyIndex = 0;
+    private int MAX_KID_FRIENDLY_STEPS = 5;
+
+    public List<Action> queueActions(List<Action> runningActions, Telemetry telemetry, boolean isKidFriendlyModeOn) {
+        if (!isKidFriendlyModeOn){
+            return queueActions(runningActions, telemetry);
+        }
+
+        if (gamepad.aDown && kidFriendlyIndex > 0){
+            kidFriendlyIndex--;
+        }
+        if (gamepad.bDown && kidFriendlyIndex < MAX_KID_FRIENDLY_STEPS){
+            kidFriendlyIndex++;
+        } else if (gamepad.bDown){
+            kidFriendlyIndex=0;
+        }
+
+        switch (kidFriendlyIndex){
+            case 0:
+                //Some code here
+                break;
+
+            case 1:
+                //Some code here
+                break;
+
+            case 2:
+                //Some code here
+                break;
+
+            case 3:
+                //Some code here
+                break;
+
+            case 4:
+                //Some code here
+                break;
+        }
+        return runningActions;
+    }
+
     public List<Action> queueActions(List<Action> runningActions, Telemetry telemetry) {
         if (!isSelectingEndPos) {
             if (gamepad.yDown) {
